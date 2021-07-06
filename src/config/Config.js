@@ -1,5 +1,6 @@
-export const config = {
+export const config = 
+{
 
-    url : 'https://adminproject.site/api/',
-    base_url : 'https://adminproject.site',
+    "APP_BASE_API" : 'https://adminproject.site/api/',
+    "APP_BASE_URL" : 'https://adminproject.site',
 }

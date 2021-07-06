@@ -4,29 +4,14 @@ import { colors } from '../../utils';
 import { Circles,ImageDummy } from '../../assets';
 import { useDispatch,useSelector} from 'react-redux';
 import { User,LogOut,AboutMe } from '../../assets';
+import { AuthContext } from '../../components/context';
 
 
 const Akun = ({navigation}) =>{
     const handleGoTo = (screen) =>{
         navigation.navigate(screen);
     }
-    const createTwoButtonAlert = () =>
-    Alert.alert(
-        "",
-        "Apakah Anda ingin Keluar ? ",
-        [
-        {
-            text: "Cancel",
-            onPress: () => {cancelable: false},
-            style: "cancel"
-        },
-        { text: "OK", onPress: () => handleGoTo('Login') }
-        ],
-        { cancelable: false }
-    );
-    
-
-    
+    // const {Out} = React.useContext(AuthContext) ;
     return(
         <View style={styles.wrapper.pages}>
         <ScrollView showsVerticalScrollIndicator={false}>
@@ -56,7 +41,7 @@ const Akun = ({navigation}) =>{
                 <View style={styles.space(50)}/>
                 <View style={{flexDirection: 'row', right:8}}>
                     <LogOut width={25} height={25}/>
-                    <Text title="Logout"  onPress={createTwoButtonAlert} style={{color:'black',fontSize:16, marginLeft:10}}> Logout </Text>
+                    <Text title="Logout"  onPress={() => {}} style={{color:'black',fontSize:16, marginLeft:10}}> Logout </Text>
                 </View>
             </View>
         </ScrollView>

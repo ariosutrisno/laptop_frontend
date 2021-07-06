@@ -1,42 +1,35 @@
 import { combineReducers } from "redux";
 
-
-const initialStateRegister = {
-    form:{
-        name : '',
-        email : '',
-        password : '',
-        password_confirmation : '',
-    },
-    
-}
-
-const RegisterReducer = (state = initialStateRegister, action) => {
-    if (action.type === 'SET_TITLE') {
-        return{
-            ...state,
-        };
+/* INITIAL STAGE REGISTER */
+const initialStateRegister  = {
+    form: {
+        namaLengkap: '',
+        email:'',
+        password:'',
+        passwordConfirm:'',
     }
+}
+const RegisterReducer =(state = initialStateRegister, action) => {
     if (action.type === 'SET_FORM') {
-        return{
+        return {
             ...state,
             form:{
                 ...state.form,
-                [action.inputType]:action.inputValue,
-
-            },
-        };
-        
+                [action.inputType]: action.inputValue
+            }
+        }
     }
-    return state;
+    return state
 }
 
+
 const initialStateLogin = {
-    form:{
+    formLogin:{
         email : '',
         password : '',
     },
-    info:"masukkan password anda",
+    infoEmail:"Masukkan Email Anda",
+    infoPassword:"masukkan password anda",
     isLogin:true,
 }
 
@@ -44,8 +37,8 @@ const LoginReducer = (state = initialStateLogin, action) => {
     if (action.type === 'SET_FORM') {
         return{
             ...state,
-            form:{
-                ...state.form,
+            formLogin:{
+                ...state.formLogin,
                 [action.inputType]:action.inputValue,
 
             },

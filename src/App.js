@@ -6,8 +6,8 @@
  * @flow strict-local
  */
 
- import React from 'react';
- import type {Node} from 'react';
+ import React , { useEffect,useState,useMemo } from 'react';
+ import  {Node} from 'react';
  
  import {
    SafeAreaView,
@@ -17,6 +17,7 @@
    Text,
    useColorScheme,
    View,
+   ActivityIndicator,
  } from 'react-native';
  
  import {
@@ -32,9 +33,11 @@ import Router from './router';
 import {store} from './redux';
 import { Provider } from 'react-redux';
 import { Provider as PaperProvider } from 'react-native-paper';
+import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 
- const Section = ({children, title}): Node => {
+ const Section = ({children, title}) => {
    const isDarkMode = useColorScheme() === 'dark';
    return (
      <View style={styles.sectionContainer}>
@@ -59,26 +62,43 @@ import { Provider as PaperProvider } from 'react-native-paper';
      </View>
    );
  };
- 
+const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
  const App = () => {
-   const isDarkMode = useColorScheme() === 'dark';
- 
-   const backgroundStyle = {
-     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-   };
- 
-   return (
+    const isDarkMode = useColorScheme() === 'dark';
+    const backgroundStyle = {
+      backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    };
+
+    /* ASCYN STORAGE */
+      /* LOADING */
+      // useEffect(() => {
+      //   setTimeout(() => {
+      //     setIsLoading(false)
+      //   },1000);
+      // }, [])
+      // if (isLoading) {
+      //   return(
+      //     <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+      //       <ActivityIndicator size="large" color="red" />
+      //     </View>
+      //   );
+      // }
+    
+      /* END ASCYN STORAGE */
+      /* NETWORK */
      
-     <Provider store={store} >
-       <PaperProvider>
-        <NavigationContainer>
-          <Router/>
-        </NavigationContainer>
-      </PaperProvider>
-     </Provider>
-     
-   );
- };
+    return (
+      <Provider store={store} >
+            <PaperProvider>
+                <NavigationContainer>
+                      <Router/>            
+                </NavigationContainer>
+          </PaperProvider>
+        </Provider>
+      
+    );
+  };
  
  const styles = StyleSheet.create({
    sectionContainer: {

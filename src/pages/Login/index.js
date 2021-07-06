@@ -2,31 +2,61 @@ import React from 'react';
 import { Input } from '../../components/atoms';
 import { colors } from '../../utils';
 import { useDispatch,useSelector} from 'react-redux';
-import { setForm } from '../../redux';
+import {  setFormLogin } from '../../redux';
 import {Image, ScrollView, Text, View } from 'react-native';
 import axios from 'axios';
 import ActionButtonLogin from './ActionButtonLogin';
 import { LoginPng } from '../../assets';
 import { StatusBarPage } from '../../components';
+import { AuthContext } from '../../components/context';
 
 const Login = ({navigation}) =>{
+    /* REDUX REACT NATIVE */
+    const LoginReducer = useSelector(state =>state.LoginReducer)
     const dispatch = useDispatch();
-    const {form} = useSelector(state => state.LoginReducer);
-    const onInputChange = (value,inputType) => { 
-        dispatch(setForm(inputType,value));
-    };
-    
-    const POSTDATA = (screen)=>{
-        const dataForAPI ={
-            email:(form.email),
-            password:(form.password)
-        }
-        axios.post('https://adminproject.site/api/login',dataForAPI)
-        .then(res=> {
-            alert('login success')
-            navigation.navigate(screen)
-        })
-        .catch(err => console.log('err : ',err));
+    /* ONINPUTCHANGE */
+    const onInputChange = (valueType,inputType) =>{
+        dispatch(setFormLogin(inputType,valueType))
+    }
+    /* POST DATA */
+    const signIn = async()=>{
+        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ ;
+        if(LoginReducer.formLogin.email ==""){
+            ({email:'Please enter Email address'})
+		}
+        // else if(reg.test(LoginReducer.formLogin.email) === false)
+		// {
+		// LoginReducer({email:'Email is Not Correct'})
+		// return false;
+		//   }
+
+		// else if(LoginReducer.formLogin.password==""){
+        //     LoginReducer.formLogin({email:'Please enter password'})
+		// }else
+        //  {
+        //     await fetch('https://adminproject.site/api/login',{
+        //         method:'POST',
+        //         headers:{
+        //             'Accept':'Application/json',
+        //             'Content-type':'application/json'
+        //         },
+        //         body: JSON.stringify({
+        //             'email':LoginReducer.formLogin.email,
+        //             'password':LoginReducer.formLogin.password,
+        //         })
+        //     }).then((response) => response.json())
+        //     .then((responseJson)=>{
+        //         if(responseJson == "ok"){
+        //             alert("Successfully Login");
+                    
+        //         }else{
+        //             alert("Wrong Login Details");
+        //         }
+        //     })
+        //     .catch((error)=>{
+        //     console.error(error);
+        //     });
+        // }
     }
     return(
         <View style={styles.wrapper.pages}>
@@ -35,12 +65,13 @@ const Login = ({navigation}) =>{
                 <View style={styles.space(20)}/>
             <Text style={styles.Texts}>LOGIN</Text>
             <ScrollView showsVerticalScrollIndicator={false}>
-                <View style={styles.space(60)}/>
-                <Input placeholder= "Email" value={form.email} onChangeText = {value=>onInputChange(value,'email')}/>
+                <View style={styles.space(60)}  />
+                <Text style={{padding:10,margin:10,color:'red'}}>{LoginReducer.formLogin.email}</Text>
+                <Input placeholder= "Email" value={LoginReducer.formLogin.email} onChangeText={value => onInputChange(value,'email')} />
                 <View style={styles.space(50)}/>
-                <Input placeholder= "Password" value={form.password} onChangeText = {value=>onInputChange(value,'password')} secureTextEntry/>
+                <Input placeholder= "Password" value={LoginReducer.formLogin.password} onChangeText={value => onInputChange(value,'password')} secureTextEntry/>
                 <View style={styles.space(50)}/>
-                <ActionButtonLogin title="Login" block onPress={()=>POSTDATA('MainApp')}/>
+                <ActionButtonLogin title="Login" onPress={()=> {signIn()}}/>
             </ScrollView>
             
         </View>

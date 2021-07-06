@@ -3,37 +3,21 @@ import React from 'react';
 import { Input } from '../../components/atoms';
 import { colors } from '../../utils';
 import { useDispatch,useSelector} from 'react-redux';
-import { setForm } from '../../redux';
 import axios from 'axios';
 import ActionButtonRegister from './ActionButtonRegister';
 import { Registeration } from '../../assets';
 import { StatusBarPage } from '../../components';
+import { setForm } from '../../redux';
 
 
 const Register = ({navigation}) =>{
-    const {form} = useSelector(state => state.RegisterReducer);
+    /* REDUX */
+    const RegisterReducer = useSelector(state=>state.RegisterReducer)
     const dispatch = useDispatch();
-    
-    const POSTDATA = (screen)=>{
-        const dataForAPI ={
-            name:(form.name),
-            email:(form.email),
-            password:(form.password),
-            password_confirmation:(form.password_confirmation)
-        }
-        axios.post('https://adminproject.site/api/user/register',dataForAPI)
-        .then(function (response) {
-            alert('registrasi success')
-            console.log(response);
-            navigation.navigate(screen)
-        })
-        .catch(function (error) {
-        console.log(error);
-        });
+    /* ON INPUTCHANGE */
+    const onInputChange = (value, inputType) => {
+        dispatch(setForm(inputType,value))
     }
-    const onInputChange = (value,inputType) => {
-        dispatch(setForm(inputType,value));
-    };
     return(
         <View style={styles.wrapper.pages}>
             <StatusBarPage/>
@@ -41,13 +25,13 @@ const Register = ({navigation}) =>{
             <Text style={styles.Texts}>REGISTER</Text>
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={styles.space(50)}/>
-                <Input placeholder= "Nama Lengkap" value={form.name} onChangeText = {value=>onInputChange(value,'name')} />
+                <Input placeholder= "Nama Lengkap" value={RegisterReducer.form.namaLengkap} onChangeText={value => onInputChange(value,'namaLengkap')} />
                 <View style={styles.space(50)}/>
-                <Input placeholder= "Email" value={form.email} onChangeText = {value=>onInputChange(value,'email')}/>
+                <Input placeholder= "Email" value={RegisterReducer.form.email} onChangeText={value => onInputChange(value,'email')} />
                 <View style={styles.space(50)}/>
-                <Input placeholder= "Password" value={form.password} onChangeText = {value=>onInputChange(value,'password')} secureTextEntry/>
+                <Input placeholder= "Password"  value={RegisterReducer.form.password}  onChangeText={value => onInputChange(value,'password')} secureTextEntry/>
                 <View style={styles.space(50)}/>
-                <Input placeholder= "Password Confirm" value={form.password_confirmation} onChangeText = {value=>onInputChange(value,'password_confirmation')} secureTextEntry/>
+                <Input placeholder= "Password Confirm" value={RegisterReducer.form.passwordConfirm}    onChangeText={value => onInputChange(value,'passwordConfirm')} secureTextEntry/>
                 <View style={styles.space(50)}/>
                 <ActionButtonRegister title="Daftar" onPress={()=>POSTDATA('Login')} />
             </ScrollView>
