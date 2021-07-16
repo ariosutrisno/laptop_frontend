@@ -2,12 +2,27 @@ import React from 'react'
 import { StyleSheet, TextInput } from 'react-native'
 import { colors } from '../../../utils';
 
-const input = ({placeholder,...rest}) => {
+const input = ({
+    onChangeText,
+    state,
+    secureTextEntry,
+    keyboardType,
+    value,
+    pholder,
+    multiline,
+    numberOfLines,
+    editable,
+  }) => {
     return (
             <TextInput style={styles.input} 
-            placeholder={placeholder} 
-            placeholderTextColor={styles.input}
-            {...rest}
+            value={value}
+            keyboardType={keyboardType}
+            onChangeText={(val) => onChangeText(state, val)}
+            placeholder={pholder}
+            secureTextEntry={secureTextEntry}
+            multiline={multiline}
+            numberOfLines={numberOfLines}
+            editable={editable}
             />
     )
 }

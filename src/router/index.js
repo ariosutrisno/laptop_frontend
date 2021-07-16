@@ -5,9 +5,7 @@ import { Splash,Login,Register,WelcomeAuth,HomeScreen,Akun,List,RankingLaptop,Vi
 import { BottomTabNavigators } from '../components';
 import EditProfile from '../pages/Akun/editprofile';
 import AboutMe_s from '../pages/AboutMe';
-
-
-
+import {connect} from 'react-redux';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -25,22 +23,16 @@ const MainApp = () => {
   );
 }
 
-const Router = () => {
+const Router = ({auth}) => {
   
   return (
-    
-      <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen name="Splash" component={Splash} options={{headerShown:false}} />
-        <Stack.Screen name="Login" component={Login} options={{
+    <>
+    {auth.authenticated ? (
+      <Stack.Navigator initialRouteName="MainApp" >
+        
+        <Stack.Screen name="MainApp" component={MainApp} options={{
           headerShown:false,
         }}/>
-        <Stack.Screen name="Register" component={Register} options={{
-          headerShown:false,
-        }}/>
-        <Stack.Screen name="WelcomeAuth" component={WelcomeAuth} options={{
-          headerShown:false,
-        }}
-        />
         <Stack.Screen name="EditProfile" component={EditProfile} options={{
           headerShown:false,
         }}
@@ -86,12 +78,29 @@ const Router = () => {
           headerShown:false,
         }}
         />
-        <Stack.Screen name="MainApp" component={MainApp} options={{
-          headerShown:false,
-        }}/>
+        
       </Stack.Navigator>
-    
+      ):(
+        <Stack.Navigator initialRouteName="Splash" >
+          <Stack.Screen name="Splash" component={Splash} options={{headerShown:false}} />
+          <Stack.Screen name="Login" component={Login} options={{
+            headerShown:false,
+          }}/>
+          <Stack.Screen name="Register" component={Register} options={{
+            headerShown:false,
+          }}/>
+          <Stack.Screen name="WelcomeAuth" component={WelcomeAuth} options={{
+            headerShown:false,
+          }}
+          />
+        </Stack.Navigator>
+      )}
+      </>
   )
 }
-
-export default Router;
+const mapStateToProps = (state) => {
+  return {
+    auth: state.auth,
+  };
+};
+export default connect(mapStateToProps, null)(Router);

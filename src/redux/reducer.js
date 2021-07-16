@@ -1,78 +1,67 @@
-import { combineReducers } from "redux";
+import { combineReducers } from "redux"
 
-/* INITIAL STAGE REGISTER */
-const initialStateRegister  = {
-    form: {
-        namaLengkap: '',
+
+/* 
+*
+* REGISTER REDUCEER
+*
+*/
+const initialStateRegister = {
+    formRegister:{
+        nama: '',
         email:'',
         password:'',
-        passwordConfirm:'',
-    }
+        password_confirm:'',
+    },
+    isRegister:true,
+    
 }
-const RegisterReducer =(state = initialStateRegister, action) => {
-    if (action.type === 'SET_FORM') {
-        return {
+
+const RegisterReducer = (state = initialStateRegister,action)=>{
+    if (action.type === 'SET_FORM_REGISTER') {
+        return{
             ...state,
-            form:{
-                ...state.form,
-                [action.inputType]: action.inputValue
-            }
+            formRegister:{
+                ...state.formRegister,
+                [action.inputType]:action.inputValue,
+            },
         }
+    }
+    if (action.type) {
+        
     }
     return state
 }
-
-
+/* 
+*
+* LOGIN REDUCEER
+*
+*/
 const initialStateLogin = {
     formLogin:{
-        email : '',
-        password : '',
+        email:'',
+        password:'',
     },
-    infoEmail:"Masukkan Email Anda",
-    infoPassword:"masukkan password anda",
     isLogin:true,
 }
 
-const LoginReducer = (state = initialStateLogin, action) => {
-    if (action.type === 'SET_FORM') {
+const LoginReducer = (state = initialStateLogin,action)=>{
+    if (action.type === 'SET_FORM_LOGIN') {
         return{
             ...state,
             formLogin:{
                 ...state.formLogin,
                 [action.inputType]:action.inputValue,
-
-            },
-        };
-        
-    }
-    return state;
-}
-
-const initiaStateEditProfile = {
-    form:{
-        fullname:'',
-        email: '',
-        password : '',
-        confirm_password: '',
-        gender : '',
-
-    }
-}
-const EditProfile = (state = initiaStateEditProfile,action)=>{
-    if (action.type === 'SET_FORM') {
-        return{
-            ...state,
-            form:{
-                ...state.form,
-                [action.inputType]:action.inputValue,
             }
-        };
+
+        }
     }
-    return state;
+    return state
 }
-const reducer = combineReducers({
+
+const Reducer = combineReducers({
     RegisterReducer,
     LoginReducer,
-    EditProfile,
-});
-export default reducer;
+})
+
+export default Reducer

@@ -3,7 +3,7 @@ import React from 'react';
 import { Circles,ImageDummy } from '../../../assets';
 import { useDispatch,useSelector} from 'react-redux';
 import { colors } from '../../../utils';
-import { setForm } from '../../../redux';
+// import { setForm } from '../../../redux';
 import { Input } from '../../../components';
 import { RadioButton } from 'react-native-paper';
 import AwesomeButtonRick from 'react-native-really-awesome-button/src/themes/rick';
@@ -20,7 +20,7 @@ const EditProfile = ({navigation}) =>{
     const dispatch = useDispatch();
 
     const onInputChange = (value,inputType) => {
-        dispatch(setForm(inputType,value));
+        // dispatch(setForm(inputType,value));
     }
     return(
         <View style={styles.wrapper.pages}>

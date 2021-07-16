@@ -7,16 +7,21 @@ import axios from 'axios';
 import ActionButtonRegister from './ActionButtonRegister';
 import { Registeration } from '../../assets';
 import { StatusBarPage } from '../../components';
-import { setForm } from '../../redux';
+import { setFormRegister } from '../../redux';
 
 
 const Register = ({navigation}) =>{
     /* REDUX */
-    const RegisterReducer = useSelector(state=>state.RegisterReducer)
+    const {formRegister}= useSelector(state=>state.RegisterReducer)
     const dispatch = useDispatch();
     /* ON INPUTCHANGE */
     const onInputChange = (value, inputType) => {
-        dispatch(setForm(inputType,value))
+        dispatch(setFormRegister(inputType,value))
+    }
+    /* POST DATA REGISTER */
+    const register = ()=>{
+        console.log('data : ', formRegister)
+       
     }
     return(
         <View style={styles.wrapper.pages}>
@@ -25,15 +30,15 @@ const Register = ({navigation}) =>{
             <Text style={styles.Texts}>REGISTER</Text>
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={styles.space(50)}/>
-                <Input placeholder= "Nama Lengkap" value={RegisterReducer.form.namaLengkap} onChangeText={value => onInputChange(value,'namaLengkap')} />
+                <Input placeholder= "Nama Lengkap" value={formRegister.nama} onChangeText={value => onInputChange(value,'nama')} />
                 <View style={styles.space(50)}/>
-                <Input placeholder= "Email" value={RegisterReducer.form.email} onChangeText={value => onInputChange(value,'email')} />
+                <Input placeholder= "Email" value={formRegister.email} onChangeText={value => onInputChange(value,'email')} autoCapitalize={'none'} keyboardType={'email-address'} />
                 <View style={styles.space(50)}/>
-                <Input placeholder= "Password"  value={RegisterReducer.form.password}  onChangeText={value => onInputChange(value,'password')} secureTextEntry/>
+                <Input placeholder= "Password"  value={formRegister.password}  onChangeText={value => onInputChange(value,'password')} secureTextEntry/>
                 <View style={styles.space(50)}/>
-                <Input placeholder= "Password Confirm" value={RegisterReducer.form.passwordConfirm}    onChangeText={value => onInputChange(value,'passwordConfirm')} secureTextEntry/>
+                <Input placeholder= "Password Confirm" value={formRegister.password_confirm}   onChangeText={value => onInputChange(value,'password_confirm')} secureTextEntry/>
                 <View style={styles.space(50)}/>
-                <ActionButtonRegister title="Daftar" onPress={()=>POSTDATA('Login')} />
+                <ActionButtonRegister title="Daftar" onPress={()=>{register()}} />
             </ScrollView>
             
         </View>

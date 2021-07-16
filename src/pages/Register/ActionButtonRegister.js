@@ -1,12 +1,14 @@
 import React from 'react';
 import {Text} from 'react-native';
+import { useDispatch,useSelector} from 'react-redux';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { colors } from '../../utils';
 
 
 const ActionButtonRegister = ({title,onPress}) =>{
+    const [errors,setErrors] = React.useState({})
     return (
-        <TouchableOpacity style={styles.wrapper.components} onPress={onPress}>
+        <TouchableOpacity style={styles.wrapper.components} onPress={onPress} >
             <Text style={styles.text.titles} >{title}</Text>
         </TouchableOpacity>
     );

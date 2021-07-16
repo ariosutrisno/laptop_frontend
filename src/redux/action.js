@@ -1,7 +1,6 @@
-export const setForm = (inputType,value) => {
-    return{type: 'SET_FORM', inputType:inputType,inputValue:value};
-};
-
-export const setFormLogin = (InputType,valueType)=>{
-    return {type: 'SET_FORM', inputType:InputType,inputValue:valueType}
+export const setFormLogin = (inputType,value) =>{
+    return {type: 'SET_FORM_LOGIN', inputType:inputType, inputValue:value}
+}
+export const setFormRegister = (inputType,value) =>{
+    return {type: 'SET_FORM_REGISTER', inputType:inputType, inputValue:value}
 }

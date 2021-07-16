@@ -11,6 +11,7 @@ export const colors = {
         textWrite:'#ffffff',
     },
 
+    /* COLOR BARU UNTUK FRONTEND */
     Background_Default:'#1e90ff', //dogreblue
     Border_Default:'#1e90ff',
     Font_Color_White:'#ffffff', //putih

@@ -1,117 +1,113 @@
 import { Image, Text, View,Button,TextInput,ScrollView,FlatList,TouchableOpacity,Dimensions,Animated } from 'react-native';
-import React,{ useEffect, useState }  from 'react';
+import React,{ useEffect, useState,Component,useRef }  from 'react';
 import { colors } from '../../utils';
 import { StatusBarPage } from '../../components';
-import faker from 'faker';
 import DummyKriteria from './dummy';
-import { FloatingAction } from "react-native-floating-action";
-import axios from 'axios';
+import {connect, useDispatch} from 'react-redux';
+import {
+    Kriteria,
+} from '../../config/redux/_actions/_list_data_hitung/data_hitung';
 
-const actions = [
-        {
-        text: "create data",
-        icon: require("../../assets/illustrations/create.png"),
-        name: "create",
-        position: 1
-        },
-    
-    ];
-const { width, height } = Dimensions.get('screen');
-faker.seed(10); 
-const DATA = [...Array(30).keys()].map(( Dummy) => {
-    return {
-        key: faker.random.uuid(),
-        image: '',
-        name: faker.name.findName(),
-        jobTitle: faker.name.jobTitle(),
-        email: faker.internet.email(),
-    };
-});
-
-const SPACING = 20;
-const AVATAR_SIZE = 70;
-const ITEM_SIZE = AVATAR_SIZE + SPACING *3;
-
-const DataKriteria = ({navigation}) =>{
-
-    const handleGoTo = (screen) =>{
-        navigation.navigate(screen);
+class DataKriteria extends Component {
+    constructor() {
+        super()
+        this.state = {
+            data_kriteria : [],
+            loading : false,
+        }
     }
-    const scrollY = React.useRef(new Animated.Value(8)).current;
 
-    /* 
-    *
-    *GET DATA KRITERIA
-    * 
-    */
-    const [isLoading, setLoading] = useState(true);
-    const [data, setData] = useState([]);
-    useEffect(() => {
-        axios.get('https://adminproject.site/api/user/dataKriteria')
-            .then(function (response) {
-                // handle success
-                console.log(response);
+    getData = async()=>{
+        const datakriteria = await this.props.Kriteria()
+        this.state({
+            data_kriteria: datakriteria.value,
+            refreshing:false,
+            loading:false,
+        })
+    }
+    componentDidMount() {
+        this.setState({
+            loading: true,
+        });
+        this.getData();
+        }
+        
+    _onRefresh = () => {
+        this.setState({refreshing: true});
+        this.getData({refreshing: false});
+        };
+
+        _scrollY = ()=>{
+            this.state({
+                scrollY:useRef(new Animated.Value(8)).current
             })
-    }, [])
-    
-    return(
-        <View style={styles.wrapper.pages}>
-            <StatusBarPage/>
-                <View style={styles.lineText}>
-                    <View style={styles.row}>
-                    <Text style={styles.texts}>DATA KRITERIA</Text>
-                    </View>
-                </View>
-                <View style={styles.wrapper.components}>
-                    <Animated.FlatList
-                        data={data}
-                        keyExtractor={item=>item.key}
-                        onScroll={Animated.event(
-                            [{nativeEvent: {contentOffset:{y:scrollY}}}],
-                            {useNativeDriver:true}
-                        )}
-                        contentContainerStyle={{ 
-                            padding:SPACING,
-                        }}
-                        renderItem={({item, index}) => {
-                            const inputRange = [
-                                -1,
-                                0,
-                                ITEM_SIZE * index,
-                                ITEM_SIZE * (index + 2)
-                            ]
+        }
+        render() {
+            const{
+                data_kriteria,
+                loading,
+                scrollY,
+            } = this.state
+            return (
+                <View style={styles.wrapper.pages}>
+                    <StatusBarPage/>
+                        <View style={styles.lineText}>
+                            <View style={styles.row}>
+                            <Text style={styles.texts}>DATA KRITERIA</Text>
+                            </View>
+                        </View>
+                        <View style={styles.wrapper.components}>
+                            <Animated.FlatList
+                                data={DummyKriteria}
+                                // keyExtractor={item=>item.key}
+                                onScroll={Animated.event(
+                                    [{nativeEvent: {contentOffset:{y:this._scrollY}}}],
+                                    {useNativeDriver:true}
+                                )}
+                                contentContainerStyle={{ 
+                                    padding:SPACING,
+                                }}
+                                renderItem={({item, index}) => {
+                                    const inputRange = [
+                                        -1,
+                                        0,
+                                        ITEM_SIZE * index,
+                                        ITEM_SIZE * (index + 2)
+                                    ]
 
-                            const scale =scrollY.interpolate({
-                                inputRange,
-                                outputRange:[1,1,1,0]
-                            })
+                                    const scale = this._scrollY.interpolate({
+                                        inputRange,
+                                        outputRange:[1,1,1,0]
+                                    })
 
-                            return <Animated.View style={{flexDirection:'row', padding:SPACING, marginBottom:SPACING, backgroundColor:'#00FF7F', borderRadius:25, 
-                            top:25,
-                            transform: [{scale}]
-                            }}>
-                            <Image
-                                source={item.imageUrl}
-                                style={{ 
-                                    width: AVATAR_SIZE, 
-                                    height: AVATAR_SIZE, 
-                                    borderRadius: AVATAR_SIZE,
-                                    marginRight: SPACING / 2,
+                                    return <Animated.View style={{flexDirection:'row', padding:SPACING, marginBottom:SPACING, backgroundColor:'#00FF7F', borderRadius:25, 
+                                    top:25,
+                                    transform: [{scale}]
+                                    }}>
+                                    <Image
+                                        source={item.imageUrl}
+                                        style={{ 
+                                            width: AVATAR_SIZE, 
+                                            height: AVATAR_SIZE, 
+                                            borderRadius: AVATAR_SIZE,
+                                            marginRight: SPACING / 2,
+                                        }}
+                                    />
+                                    <View>
+                                        <Text style={{fontSize:14, fontWeight:'700'}}> </Text>
+                                        <Text style={{fontSize:14, opacity:.7, fontWeight:'700'}}></Text>
+                                        <Text style={{fontSize:14, opacity:.7,fontWeight:'700',color:'black'}}></Text>
+                                    </View>
+                                    </Animated.View>
                                 }}
                             />
-                            <View>
-                                <Text style={{fontSize:14, fontWeight:'700'}}>{item.nama_kriteria} </Text>
-                                <Text style={{fontSize:14, opacity:.7, fontWeight:'700'}}></Text>
-                                <Text style={{fontSize:14, opacity:.7,fontWeight:'700',color:'black'}}></Text>
-                            </View>
-                            </Animated.View>
-                        }}
-                    />
-                    
+                            
+                        </View>
                 </View>
-        </View>
-    );
-};
+            )
+        }
+}
+
 
 const styles = {
     wrapper:{
@@ -176,4 +172,18 @@ const styles = {
     },
     
 };
-export default DataKriteria;
+
+// const { width, height } = Dimensions.get('screen');
+
+
+const SPACING = 20;
+const AVATAR_SIZE = 70;
+const ITEM_SIZE = AVATAR_SIZE + SPACING *3;
+// const scrollYY = React.useRef(new Animated.Value(8)).current;
+const mapDispatchToProps = (dispatch) => {
+    return {
+    list_kriteria: () => dispatch(Kriteria()),
+    };
+};
+
+export default connect(null, mapDispatchToProps)(DataKriteria);

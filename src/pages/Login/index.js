@@ -1,82 +1,118 @@
-import React from 'react';
+import React, {Component} from 'react';
 import { Input } from '../../components/atoms';
 import { colors } from '../../utils';
-import { useDispatch,useSelector} from 'react-redux';
-import {  setFormLogin } from '../../redux';
-import {Image, ScrollView, Text, View } from 'react-native';
-import axios from 'axios';
+import {Image, ScrollView, Text, View,ToastAndroid } from 'react-native';
 import ActionButtonLogin from './ActionButtonLogin';
 import { LoginPng } from '../../assets';
 import { StatusBarPage } from '../../components';
-import { AuthContext } from '../../components/context';
-
-const Login = ({navigation}) =>{
-    /* REDUX REACT NATIVE */
-    const LoginReducer = useSelector(state =>state.LoginReducer)
-    const dispatch = useDispatch();
-    /* ONINPUTCHANGE */
-    const onInputChange = (valueType,inputType) =>{
-        dispatch(setFormLogin(inputType,valueType))
+import {connect} from 'react-redux';
+import {login} from '../../config/redux/_actions/_auth/auth';
+class Login extends Component{
+    constructor() {
+        super();
+        this.state = {
+            email: '',
+            password: '',
+            disabled: true,
+            submit: false,
+        };
+        }
+        handleChange = (state, val) => {
+        this.setState(
+            {
+            [state]: val,
+            },
+            () => this.verification(),
+        );
+        };
+        handleSubmit = () => {
+        const state = this.state;
+        this.setState({
+            submit: true,
+        });
+        const params = {
+            email: state.email,
+            password: state.password,
+        };
+        setTimeout(() => {
+            try {
+            this.props
+                .login(params)
+                .then((res) => {
+                console.log('RESULT', res.value);
+                })
+                .catch((err) => {
+                ToastAndroid.show('Email atau Password salah', ToastAndroid.BOTTOM);
+                this.setState({
+                    submit: false,
+                });
+                });
+            } catch (error) {
+            ToastAndroid.show('Email atau Password salah', ToastAndroid.BOTTOM);
+            this.setState({
+                submit: false,
+            });
+            }
+        }, 500);
+        };
+        verification = () => {
+        const state = this.state;
+        if (state.email == '') {
+            this.setState({
+            disabled: true,
+            });
+            return false;
+        } else if (state.password == '') {
+            this.setState({
+            disabled: true,
+            });
+            return false;
+        } else {
+            this.setState({
+            disabled: false,
+            });
+            return true;
+        }
+        };
+    render() {
+        const state = this.state;
+        return(
+            <View style={styles.wrapper.pages}>
+                <StatusBarPage/>
+                <Image source={LoginPng} style={styles.illustration}/>
+                    <View style={styles.space(20)}/>
+                <Text style={styles.Texts}>LOGIN</Text>
+                <ScrollView showsVerticalScrollIndicator={false}>
+                    <View style={styles.space(60)}  />
+                    <Input
+                    title="Email"
+                    pholder="Email" 
+                    onChangeText={this.handleChange}
+                    state="email"
+                    value={state.email}
+                    keyboardType={'email-address'} 
+                    autoCapitalize={'none'}/>
+                    <View style={styles.space(50)}/>
+                    <Input
+                    title="Password"
+                    pholder="Password" 
+                    onChangeText={this.handleChange}
+                    state="password"
+                    secureTextEntry={true}
+                    value={state.password}/>
+                    <View style={styles.space(50)}/>
+                    <ActionButtonLogin 
+                    disabled={state.disabled}
+                    submit={state.submit}
+                    title="Login"
+                    onPress={this.handleSubmit}/>
+                </ScrollView>
+                
+            </View>
+        );
     }
-    /* POST DATA */
-    const signIn = async()=>{
-        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ ;
-        if(LoginReducer.formLogin.email ==""){
-            ({email:'Please enter Email address'})
-		}
-        // else if(reg.test(LoginReducer.formLogin.email) === false)
-		// {
-		// LoginReducer({email:'Email is Not Correct'})
-		// return false;
-		//   }
-
-		// else if(LoginReducer.formLogin.password==""){
-        //     LoginReducer.formLogin({email:'Please enter password'})
-		// }else
-        //  {
-        //     await fetch('https://adminproject.site/api/login',{
-        //         method:'POST',
-        //         headers:{
-        //             'Accept':'Application/json',
-        //             'Content-type':'application/json'
-        //         },
-        //         body: JSON.stringify({
-        //             'email':LoginReducer.formLogin.email,
-        //             'password':LoginReducer.formLogin.password,
-        //         })
-        //     }).then((response) => response.json())
-        //     .then((responseJson)=>{
-        //         if(responseJson == "ok"){
-        //             alert("Successfully Login");
-                    
-        //         }else{
-        //             alert("Wrong Login Details");
-        //         }
-        //     })
-        //     .catch((error)=>{
-        //     console.error(error);
-        //     });
-        // }
-    }
-    return(
-        <View style={styles.wrapper.pages}>
-            <StatusBarPage/>
-            <Image source={LoginPng} style={styles.illustration}/>
-                <View style={styles.space(20)}/>
-            <Text style={styles.Texts}>LOGIN</Text>
-            <ScrollView showsVerticalScrollIndicator={false}>
-                <View style={styles.space(60)}  />
-                <Text style={{padding:10,margin:10,color:'red'}}>{LoginReducer.formLogin.email}</Text>
-                <Input placeholder= "Email" value={LoginReducer.formLogin.email} onChangeText={value => onInputChange(value,'email')} />
-                <View style={styles.space(50)}/>
-                <Input placeholder= "Password" value={LoginReducer.formLogin.password} onChangeText={value => onInputChange(value,'password')} secureTextEntry/>
-                <View style={styles.space(50)}/>
-                <ActionButtonLogin title="Login" onPress={()=> {signIn()}}/>
-            </ScrollView>
-            
-        </View>
-    );
 };
+
 const styles ={
     wrapper:{
         pages:{
@@ -111,4 +147,9 @@ const styles ={
         fontSize : 30,
     }
 };
-export default Login;
+const mapDispatchToProps = (dispatch) => {
+    return {
+      login: (data) => dispatch(login(data)),
+    };
+  };
+export default  connect(null, mapDispatchToProps)(Login);
