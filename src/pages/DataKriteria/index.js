@@ -1,5 +1,5 @@
 import { Image, Text, View,Button,TextInput,ScrollView,FlatList,TouchableOpacity,Dimensions,Animated } from 'react-native';
-import React,{ useEffect, useState,Component,useRef }  from 'react';
+import React,{ useEffect, useState }  from 'react';
 import { colors } from '../../utils';
 import { StatusBarPage } from '../../components';
 import DummyKriteria from './dummy';
@@ -8,106 +8,96 @@ import {
     Kriteria,
 } from '../../config/redux/_actions/_list_data_hitung/data_hitung';
 
-class DataKriteria extends Component {
-    constructor() {
-        super()
-        this.state = {
-            data_kriteria : [],
-            loading : false,
+const defaultKriteria = {
+    status:"oke",
+    list_kriteria:[]
+}
+const DataKriteria = ({list_kriteria,dd}) =>{
+    /* 
+    * data
+    * isLoading
+    * isEror
+    * isRefresh
+    */
+    const [data,setData] = useState(defaultKriteria)
+    const [isloading,setloading] = useState(false)
+    const [isError,setEror] = useState(false)
+    const [isRefresh,setRefresh] = useState(false)
+    const scrollY = React.useRef(new Animated.Value(8)).current;
+    
+    
+    const fetchData = async() =>{
+            setloading(true)
+            try {
+                const response = await list_kriteria()
+            } catch (error) {
+                setEror(true)
+            }
+            
+            setloading(false)
         }
-    }
-
-    getData = async()=>{
-        const datakriteria = await this.props.Kriteria()
-        this.state({
-            data_kriteria: datakriteria.value,
-            refreshing:false,
-            loading:false,
-        })
-    }
-    componentDidMount() {
-        this.setState({
-            loading: true,
-        });
-        this.getData();
-        }
+        useEffect(() => {
         
-    _onRefresh = () => {
-        this.setState({refreshing: true});
-        this.getData({refreshing: false});
-        };
+            fetchData()
+        }, [])
+    return(
+        <View style={styles.wrapper.pages}>
+            <StatusBarPage/>
+                <View style={styles.lineText}>
+                    <View style={styles.row}>
+                    <Text style={styles.texts}>DATA KRITERIA</Text>
+                    </View>
+                </View>
+                <View style={styles.wrapper.components}>
+                    <Animated.FlatList
+                        data={dd?.data}
+                        keyExtractor={item=>item.idx_kriteria.toString()}
+                        onScroll={Animated.event(
+                            [{nativeEvent: {contentOffset:{y:scrollY}}}],
+                            {useNativeDriver:true}
+                        )}
+                        contentContainerStyle={{ 
+                            padding:SPACING,
+                        }}
+                        renderItem={({item, index}) => {
+                            const inputRange = [
+                                -1,
+                                0,
+                                ITEM_SIZE * index,
+                                ITEM_SIZE * (index + 2)
+                            ]
 
-        _scrollY = ()=>{
-            this.state({
-                scrollY:useRef(new Animated.Value(8)).current
-            })
-        }
-        render() {
-            const{
-                data_kriteria,
-                loading,
-                scrollY,
-            } = this.state
-            return (
-                <View style={styles.wrapper.pages}>
-                    <StatusBarPage/>
-                        <View style={styles.lineText}>
-                            <View style={styles.row}>
-                            <Text style={styles.texts}>DATA KRITERIA</Text>
-                            </View>
-                        </View>
-                        <View style={styles.wrapper.components}>
-                            <Animated.FlatList
-                                data={DummyKriteria}
-                                // keyExtractor={item=>item.key}
-                                onScroll={Animated.event(
-                                    [{nativeEvent: {contentOffset:{y:this._scrollY}}}],
-                                    {useNativeDriver:true}
-                                )}
-                                contentContainerStyle={{ 
-                                    padding:SPACING,
-                                }}
-                                renderItem={({item, index}) => {
-                                    const inputRange = [
-                                        -1,
-                                        0,
-                                        ITEM_SIZE * index,
-                                        ITEM_SIZE * (index + 2)
-                                    ]
+                            const scale =scrollY.interpolate({
+                                inputRange,
+                                outputRange:[1,1,1,0]
+                            })
 
-                                    const scale = this._scrollY.interpolate({
-                                        inputRange,
-                                        outputRange:[1,1,1,0]
-                                    })
-
-                                    return <Animated.View style={{flexDirection:'row', padding:SPACING, marginBottom:SPACING, backgroundColor:'#00FF7F', borderRadius:25, 
-                                    top:25,
-                                    transform: [{scale}]
-                                    }}>
-                                    <Image
-                                        source={item.imageUrl}
-                                        style={{ 
-                                            width: AVATAR_SIZE, 
-                                            height: AVATAR_SIZE, 
-                                            borderRadius: AVATAR_SIZE,
-                                            marginRight: SPACING / 2,
-                                        }}
-                                    />
-                                    <View>
-                                        <Text style={{fontSize:14, fontWeight:'700'}}> </Text>
-                                        <Text style={{fontSize:14, opacity:.7, fontWeight:'700'}}></Text>
-                                        <Text style={{fontSize:14, opacity:.7,fontWeight:'700',color:'black'}}></Text>
-                                    </View>
-                                    </Animated.View>
+                            return <Animated.View style={{flexDirection:'row', padding:SPACING, marginBottom:SPACING, backgroundColor:'#00FF7F', borderRadius:25, 
+                            top:25,
+                            transform: [{scale}]
+                            }}>
+                            <Image
+                                source={require('../../assets/illustrations/statistics.png')}
+                                style={{ 
+                                    width: AVATAR_SIZE, 
+                                    height: AVATAR_SIZE, 
+                                    borderRadius: AVATAR_SIZE,
+                                    marginRight: SPACING / 2,
                                 }}
                             />
-                            
-                        </View>
+                            <View>
+                                <Text style={{fontSize:14, fontWeight:'700'}}> ID_KRITERIA : {item.kriteria_id} </Text>
+                                <Text style={{fontSize:14, opacity:.7, fontWeight:'700'}}> NAMA KRITERIA : {item.nama_kriteria}</Text>
+                                <Text style={{fontSize:14, opacity:.7,fontWeight:'700',color:'black'}}> BOBOT : {item.bobot}</Text>
+                            </View>
+                            </Animated.View>
+                        }}
+                    />
+                    
                 </View>
-            )
-        }
-}
-
+        </View>
+    );
+};
 
 const styles = {
     wrapper:{
@@ -179,11 +169,16 @@ const styles = {
 const SPACING = 20;
 const AVATAR_SIZE = 70;
 const ITEM_SIZE = AVATAR_SIZE + SPACING *3;
-// const scrollYY = React.useRef(new Animated.Value(8)).current;
+
 const mapDispatchToProps = (dispatch) => {
     return {
     list_kriteria: () => dispatch(Kriteria()),
     };
 };
+const mapStateToProps = (state) =>{
+    return {
+        dd: state.datakriteria
+    }
+}
 
-export default connect(null, mapDispatchToProps)(DataKriteria);
+export default connect(mapStateToProps, mapDispatchToProps)(DataKriteria);
