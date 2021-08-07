@@ -1,11 +1,14 @@
-import React from 'react'
-import { StyleSheet, Text, View,Dimensions,TextInput } from 'react-native'
+import React, { useEffect } from 'react'
+import { StyleSheet, Text, View,Dimensions,TextInput,Alert,ToastAndroid } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { ADDSVG } from '../../../assets'
 import { Button, StatusBarPage } from '../../../components';
 import { colors } from '../../../utils';
-import {Picker} from '@react-native-picker/picker';
 import ButtonInputData from '../buttonInput';
+import {connect} from 'react-redux';
+import {
+    add_req,
+} from '../../../config/redux/_actions/_rekomen/rekomen';
 import LinearGradient from 'react-native-linear-gradient';
 /* 
 import const
@@ -14,11 +17,71 @@ import const
 const { width, height } = Dimensions.get('screen');
 
 
-const InputKebutuhan = ({navigation}) => {
+const InputKebutuhan = ({navigation,rekomenAdd}) => {
     const handleGoTo = (screen) =>{
         navigation.navigate(screen);
     }
-    const [selectedLanguage, setSelectedLanguage] = React.useState();
+    const [input, setInput] = React.useState({
+        merek:'',
+        harga:'',
+        disabled: true,
+        submit: false,
+    });
+    const onHandleChange = (stateProps) => (text) => {
+        setInput((oldState)=>({
+            ...oldState,
+            [stateProps]:text,
+        }
+        ))
+    }
+    const Sendsubmit = async() =>{
+        const state = input;
+        const param = {
+        merek_laptop: state.merek,
+        harga_laptop: state.harga,
+        };
+        setTimeout(() => data(), 3000);
+        try {
+            await rekomenAdd(param).then((res) => {
+                console.log('RESULT', res.value);
+            });
+            ToastAndroid.show('Data Berhasil Ditambahkan', ToastAndroid.BOTTOM);
+        } catch (error) {
+            ToastAndroid.show('Data Gagal Ditambahkan', ToastAndroid.BOTTOM);
+            setInput({
+                submit:false,
+            })
+            console.log('ERROR', error);
+        }
+    } 
+    const validation = () =>{
+        const state = input;
+        if (state.merek == '') {
+        setInput({
+            disabled: true,
+        });
+        return false;
+        } else if (state.harga == '') {
+        setInput({
+            disabled: true,
+        });
+        return false;
+        }  else {
+        setInput({
+            disabled: false,
+        }); 
+        return true;
+        }
+    }
+    const handleSubmit = () =>{
+        setInput({
+            submit: true,
+        },validation());
+        setTimeout(() =>Sendsubmit(), 500);
+    }
+    const data = () =>{
+        handleGoTo('RekomendasiLaptop')
+    }
     return (
         <View style={styles.pages.container}>
             <ScrollView
@@ -30,28 +93,24 @@ const InputKebutuhan = ({navigation}) => {
             <View style={styles.pages.contentWhite}/>
                 <LinearGradient colors={['#9CECFB', '#65C7F7','#0052D4']} style={styles.pages.squareData}>
                 <Text style={styles.write}>INPUT DATA REQUEST CUSTOMER</Text>
-                    <Picker
-                        selectedValue={selectedLanguage}
-                        style={styles.Picker}
-                        prompt="Silahkan Pilih Merek"
-                        onValueChange={(itemValue, itemIndex) =>
-                            setSelectedLanguage(itemValue)
-                        }>
-                        <Picker.Item label="..." value={null} />
-                        <Picker.Item label="Asus" value="js" />
-                        <Picker.Item label="HP" value="js" />
-                        <Picker.Item label="ACER" value="js" />
-                        <Picker.Item label="DELL" value="js" />
-                        <Picker.Item label="MACBOOK" value="js" />
-                        <Picker.Item label="LENOVO" value="js" />
-                        <Picker.Item label="MSI" value="js" />
-                    </Picker>
+                    
+                    <TextInput
+                    style={styles.inputData} 
+                    placeholder="Merek laptop"
+                    value={input.merek}
+                    onChangeText={onHandleChange("merek")}
+                    />
                     <TextInput
                     style={styles.inputData} 
                     placeholder="HARGA LAPTOP"
+                    value={input.harga}
+                    onChangeText={onHandleChange("harga")}
                     />
                     <View style={styles.fixToText}>
-                    <ButtonInputData title="Lanjut"/>
+                    <ButtonInputData title="Lanjut" onPress={handleSubmit} 
+                    disabled={input.disabled}
+                    submit={input.submitsubmit}
+                    />
                     <ButtonInputData title="Batal" onPress={()=> navigation.goBack()}/>
                     </View>
                 </LinearGradient>
@@ -107,4 +166,9 @@ const styles = ({
         fontFamily:'times'
     }
 })
-export default InputKebutuhan
+const mapDispatchToProps = (dispatch) => {
+    return {
+      rekomenAdd: (data) => dispatch(add_req(data)),
+    };
+  };
+export default connect(null, mapDispatchToProps)(InputKebutuhan);

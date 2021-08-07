@@ -1,64 +1,50 @@
 import { Image, Text, View,Button,TextInput,ScrollView,FlatList,TouchableOpacity,Dimensions,Animated } from 'react-native';
-import { Card } from 'react-native-elements';
 import React,{ useEffect, useState }  from 'react';
 import { colors } from '../../utils';
 import { StatusBarPage } from '../../components';
-import Dummy from '../List/dummy';
-import { FloatingAction } from "react-native-floating-action";
 import {connect} from 'react-redux';
 import {
-    getlistlaptop,
-} from '../../config/redux/_actions/_laptop/laptop';
-const { width, height } = Dimensions.get('screen');
+    Normalisasi,
+} from '../../config/redux/_actions/_list_data_hitung/data_hitung';
 
-const SPACING = 20;
-const AVATAR_SIZE = 70;
-const ITEM_SIZE = AVATAR_SIZE + SPACING *3;
-const actions = [
-    {
-    text: "filter laptop",
-    icon: require("../../assets/illustrations/create.png"),
-    name: "create",
-    position: 1
-    },
-
-];
-
-const List = ({navigation,list_laptop,state_laptop}) =>{
-    const handleGoTo = (screen) =>{
-        navigation.navigate(screen);
-    }
+const datanormalisasi = ({normalisasi_kriteria,dd}) =>{
+    /* 
+    * data
+    * isLoading
+    * isEror
+    * isRefresh
+    */
     const [isloading,setloading] = useState(false)
     const [isError,setEror] = useState(false)
     const [isRefresh,setRefresh] = useState(false)
+    const scrollY = React.useRef(new Animated.Value(8)).current;
+    
     const fetchData = async() =>{
-        setloading(true)
-        try {
-            const response = await list_laptop()
-        } catch (error) {
-            setEror(true)
+            setloading(true)
+            try {
+                const response = await normalisasi_kriteria()
+                // console.log('respon ===========>', response)
+            } catch (error) {
+                setEror(true)
+            }
+            setloading(false)
         }
-        
-        setloading(false)
-    }
-    useEffect(() => {
-    // console.log('response===================>>>>', state_laptop)
-        fetchData()
-    }, [])
-const scrollY = React.useRef(new Animated.Value(8)).current;
+        useEffect(() => {
+            fetchData()
+        }, [])
+        // console.log('respons dd==========>>', dd.data.data_kriteria,dd.data.data_kriteria_get)
     return(
         <View style={styles.wrapper.pages}>
             <StatusBarPage/>
                 <View style={styles.lineText}>
                     <View style={styles.row}>
-                    <Text style={styles.texts}>DATA LAPTOP</Text>
+                    <Text style={styles.texts}>DATA Normalisasi</Text>
                     </View>
                 </View>
-
                 <View style={styles.wrapper.components}>
                     <Animated.FlatList
-                        data={state_laptop?.data}
-                        keyExtractor={item=>item.idx_datalaptop.toString()}
+                        data={dd?.data.data_kriteria}
+                        keyExtractor={item=>item.idx_kriteria.toString()}
                         onScroll={Animated.event(
                             [{nativeEvent: {contentOffset:{y:scrollY}}}],
                             {useNativeDriver:true}
@@ -84,28 +70,23 @@ const scrollY = React.useRef(new Animated.Value(8)).current;
                             transform: [{scale}]
                             }}>
                             <Image
-                                source={item.imageUrl}
+                                source={require('../../assets/illustrations/statistics.png')}
                                 style={{ 
                                     width: AVATAR_SIZE, 
                                     height: AVATAR_SIZE, 
                                     borderRadius: AVATAR_SIZE,
                                     marginRight: SPACING / 2,
                                 }}
-                                
                             />
                             <View>
-                                <Text style={{fontSize:22, fontWeight:'700'}}> Nama Laptop :  {item.merek_laptop} </Text>
-                                <Text style={{fontSize:18, opacity:.7}}> harga laptop {item.harga} </Text>
-                                <Text style={{fontSize:18, opacity:.8, color:'#0099cc'}} onPress={()=> handleGoTo('ViewData')}> selengkapnya... </Text>
+                                <Text style={{fontSize:14, fontWeight:'700'}}> ID KRITERIA : {item.kriteria_id} </Text>
+                                <Text style={{fontSize:14, opacity:.7, fontWeight:'700'}}> NAMA KRITERIA : {item.nama_kriteria}</Text>
+                                <Text style={{fontSize:14, opacity:.7,fontWeight:'700',color:'black'}}> Normalisasi : {(item.bobot / dd?.data.total_data_kriteria).toFixed(3) } </Text>
                             </View>
                             </Animated.View>
                         }}
                     />
-                    {/* <FloatingAction
-                    actions={actions}
-                    onPressItem={() => handleGoTo('inputDatalaptop')}
-                    color={'red'}
-                /> */}
+                    
                 </View>
         </View>
     );
@@ -175,14 +156,22 @@ const styles = {
     
 };
 
+// const { width, height } = Dimensions.get('screen');
+
+
+const SPACING = 20;
+const AVATAR_SIZE = 70;
+const ITEM_SIZE = AVATAR_SIZE + SPACING *3;
+
 const mapDispatchToProps = (dispatch) => {
     return {
-    list_laptop: () => dispatch(getlistlaptop()),
+    normalisasi_kriteria: () => dispatch(Normalisasi()),
     };
 };
 const mapStateToProps = (state) =>{
     return {
-        state_laptop: state.datalaptop
+        dd: state.normalisasi
     }
 }
-export default connect(mapStateToProps, mapDispatchToProps)(List);
+
+export default connect(mapStateToProps, mapDispatchToProps)(datanormalisasi);

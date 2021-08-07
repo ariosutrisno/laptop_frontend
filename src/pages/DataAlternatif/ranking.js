@@ -1,64 +1,60 @@
 import { Image, Text, View,Button,TextInput,ScrollView,FlatList,TouchableOpacity,Dimensions,Animated } from 'react-native';
-import { Card } from 'react-native-elements';
-import React,{ useEffect, useState }  from 'react';
+import React,{ useEffect, useState } from 'react';
 import { colors } from '../../utils';
 import { StatusBarPage } from '../../components';
-import Dummy from '../List/dummy';
-import { FloatingAction } from "react-native-floating-action";
 import {connect} from 'react-redux';
 import {
-    getlistlaptop,
-} from '../../config/redux/_actions/_laptop/laptop';
+    RANKING_ALL,
+} from '../../config/redux/_actions/_list_data_hitung/data_hitung';
+
 const { width, height } = Dimensions.get('screen');
+
 
 const SPACING = 20;
 const AVATAR_SIZE = 70;
 const ITEM_SIZE = AVATAR_SIZE + SPACING *3;
-const actions = [
-    {
-    text: "filter laptop",
-    icon: require("../../assets/illustrations/create.png"),
-    name: "create",
-    position: 1
-    },
 
-];
 
-const List = ({navigation,list_laptop,state_laptop}) =>{
-    const handleGoTo = (screen) =>{
-        navigation.navigate(screen);
-    }
+
+const Ranking = ({ranking, ranking_state}) =>{
+
+
     const [isloading,setloading] = useState(false)
     const [isError,setEror] = useState(false)
     const [isRefresh,setRefresh] = useState(false)
+    
     const fetchData = async() =>{
-        setloading(true)
-        try {
-            const response = await list_laptop()
-        } catch (error) {
-            setEror(true)
+            setloading(true)
+            try {
+                const response = await ranking()
+                // console.log('respon ===========>', response)
+            } catch (error) {
+                setEror(true)
+            }
+            
+            setloading(false)
         }
+        useEffect(() => {
+            fetchData()
+        }, [])
         
-        setloading(false)
-    }
-    useEffect(() => {
-    // console.log('response===================>>>>', state_laptop)
-        fetchData()
-    }, [])
+        console.log('respon ===========>>', ranking_state.data.alternatif)
+        
 const scrollY = React.useRef(new Animated.Value(8)).current;
     return(
         <View style={styles.wrapper.pages}>
             <StatusBarPage/>
                 <View style={styles.lineText}>
                     <View style={styles.row}>
-                    <Text style={styles.texts}>DATA LAPTOP</Text>
+                    <Text style={styles.texts}>DATA RANKING ALL</Text>
                     </View>
                 </View>
 
                 <View style={styles.wrapper.components}>
+               
                     <Animated.FlatList
-                        data={state_laptop?.data}
-                        keyExtractor={item=>item.idx_datalaptop.toString()}
+                        data={ranking_state?.data.alternatif}
+                        keyExtractor={item=>item.idx_alternatif.toString()}
                         onScroll={Animated.event(
                             [{nativeEvent: {contentOffset:{y:scrollY}}}],
                             {useNativeDriver:true}
@@ -78,7 +74,8 @@ const scrollY = React.useRef(new Animated.Value(8)).current;
                                 inputRange,
                                 outputRange:[1,1,1,0]
                             })
-
+                            
+                            const current = [...ranking_state?.data?.rank].sort(function(a, b){return b-a})
                             return <Animated.View style={{flexDirection:'row', padding:SPACING, marginBottom:SPACING, backgroundColor:'#00FF7F', borderRadius:25, 
                             top:25,
                             transform: [{scale}]
@@ -94,18 +91,17 @@ const scrollY = React.useRef(new Animated.Value(8)).current;
                                 
                             />
                             <View>
-                                <Text style={{fontSize:22, fontWeight:'700'}}> Nama Laptop :  {item.merek_laptop} </Text>
-                                <Text style={{fontSize:18, opacity:.7}}> harga laptop {item.harga} </Text>
-                                <Text style={{fontSize:18, opacity:.8, color:'#0099cc'}} onPress={()=> handleGoTo('ViewData')}> selengkapnya... </Text>
+                                <Text style={{fontSize:22, fontWeight:'700'}}> No : {item.alternatif}  </Text>
+                                <Text style={{fontSize:18, opacity:.7}}> Nama Laptop : {item.datalaptop} </Text>
+                                <Text style={{fontSize:18, opacity:.7}} > Score : {ranking_state?.data?.rank[index]} </Text>
+                                <Text style={{fontSize:18, opacity:.7}} > Ranking : {current.indexOf(ranking_state?.data?.rank[index])+1} </Text>
+                                {/* <Text style={{fontSize:18, opacity:.8, color:'#0099cc'}} onPress={()=> handleGoTo('ViewData')}>
+                                    selengkapnya...
+                                </Text> */}
                             </View>
                             </Animated.View>
                         }}
                     />
-                    {/* <FloatingAction
-                    actions={actions}
-                    onPressItem={() => handleGoTo('inputDatalaptop')}
-                    color={'red'}
-                /> */}
                 </View>
         </View>
     );
@@ -174,15 +170,14 @@ const styles = {
     },
     
 };
-
 const mapDispatchToProps = (dispatch) => {
     return {
-    list_laptop: () => dispatch(getlistlaptop()),
+    ranking: () => dispatch(RANKING_ALL()),
     };
 };
 const mapStateToProps = (state) =>{
     return {
-        state_laptop: state.datalaptop
+        ranking_state: state.rankingAll
     }
 }
-export default connect(mapStateToProps, mapDispatchToProps)(List);
+export default connect(mapStateToProps, mapDispatchToProps)(Ranking);

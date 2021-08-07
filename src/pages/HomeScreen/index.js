@@ -1,21 +1,69 @@
 import { Image, Text, View,Button,TextInput,ScrollView,Dimensions,TouchableOpacity,Alert,TouchableHighlight } from 'react-native';
 import React,{ useEffect, useState }  from 'react';
 import { colors } from '../../utils';
-import { ImageDummy,SquarePng,Calculator,
+import { ImageDummy,SquarePng,
     DataAlternatif,
     DataKriteria,
-    DataRekomenSVG,DataKebutuhan,DataLaptopSVG } from '../../assets';
+    DataRekomenSVG,DataLaptopSVG } from '../../assets';
 import { StatusBarPage } from '../../components';
-import { Card } from 'react-native-elements/dist/card/Card';
-import axios from 'axios';
+import {connect} from 'react-redux';
+import {
+    User,
+} from '../../config/redux/_actions/_auth/auth';
 
 
 const { width, height } = Dimensions.get('screen');
-const HomeScreen = ({navigation}) =>{
+const HomeScreen = ({navigation,state_user,list_user}) =>{
     const handleGoTo = (screen) =>{
         navigation.navigate(screen);
     }
-    
+    const [isloading,setloading] = useState(false)
+    const [isError,setEror] = useState(false)
+    const [isRefresh,setRefresh] = useState(false)
+
+    const fetchData = async() =>{
+        setloading(true)
+        try {
+            const response = await list_user()
+        } catch (error) {
+            setEror(true)
+        }
+        
+        setloading(false)
+    }
+    useEffect(() => {
+        fetchData()
+    }, [])
+    // console.log('response===========>>',state_user.data)
+    /* ALERT BUTTON PERHITUNGAN DAN DATA KRITERI */
+    const alertPerhitungan = () => {
+        Alert.alert(
+            "",
+            "Apakah Anda ingin melihat informasi tentang perhitungan ?",
+            [
+                {
+                text: "Cancel",
+                cancelable: true,
+                style: "cancel"
+                },
+                { text: "OK", onPress: () => handleGoTo('DataAlternatif') }
+            ]
+        )
+    }
+    const alertKriteria = () => {
+        Alert.alert(
+            "",
+            "Apakah Anda ingin melihat informasi tentang kriteria laptop ?",
+            [
+                {
+                text: "Cancel",
+                cancelable: true,
+                style: "cancel"
+                },
+                { text: "OK", onPress: () => handleGoTo('DataKriteria') }
+            ]
+        )
+    }
     
     return(
         <View style={styles.wrapper.pages}>
@@ -23,8 +71,9 @@ const HomeScreen = ({navigation}) =>{
                 <View style={styles.lineText}>
                     <Image source={ImageDummy} style={styles.illustration}/>
                     <View style={styles.row}>
-                    <Text style={styles.texts}>WELCOME !</Text>
-                    <Text style={styles.texts}>ARIO SUTRISNO </Text>
+                        <Text style={styles.texts}>WELCOME !</Text>
+                        <Text style={styles.texts}>{state_user.data.name}</Text>
+                        <Text style={styles.texts}>{state_user.data.email}</Text>
                     </View>
                 </View>
                 
@@ -50,35 +99,35 @@ const HomeScreen = ({navigation}) =>{
                         <TouchableOpacity style={{ marginVertical:10,
                         width:200,
                         height:200,
-                        }}onPress={()=> handleGoTo('DataKriteria')}>
+                        }}onPress={alertKriteria}>
                             <Image source={SquarePng} style={styles.Images.illustrations}/>
                             <DataKriteria style={styles.Images.SVG2}/>
-                            <Text style={styles.Images.texts2}>DATA KRITERIA</Text>
+                            <Text style={styles.Images.texts2}>KRITERIA</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={{ marginVertical:10,
                         width:200,
                         height:200,
-                        }} onPress={()=> handleGoTo('DataAlternatif')}>
+                        }} onPress={alertPerhitungan}>
                             <Image source={SquarePng} style={styles.Images.illustrations}/>
                             <DataAlternatif style={styles.Images.SVG3}/>
-                            <Text style={styles.Images.texts3}>DATA</Text><Text style={styles.Images.texts}>ALTERNATIF</Text>
+                            <Text style={styles.Images.texts3}>PERHITUNGAN</Text><Text style={styles.Images.texts}></Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={{ marginVertical:10,
+                        {/* <TouchableOpacity style={{ marginVertical:10,
                         width:200,
                         height:200,
                         }} onPress={()=> handleGoTo('DataPerhitungan')}>
                             <Image source={SquarePng} style={styles.Images.illustrations}/>
                             <Calculator style={styles.Images.SVG4}/>
                             <Text style={styles.Images.texts4}>DATA </Text><Text style={styles.Images.textsPer}> PERHITUNGAN </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={{ marginVertical:10,
+                        </TouchableOpacity> */}
+                        {/* <TouchableOpacity style={{ marginVertical:10,
                         width:200,
                         height:200,
-                        }} onPress={()=> handleGoTo('DataPerhitungan')}>
+                        }} onPress={()=> handleGoTo('Utility')}>
                             <Image source={SquarePng} style={styles.Images.illustrations}/>
                             <Calculator style={styles.Images.SVG4}/>
                             <Text style={styles.Images.texts4}>DATA </Text><Text style={styles.Images.textsPer}> NILAI UTILITY </Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                     </View>
                 </View>
             </ScrollView>
@@ -151,7 +200,7 @@ const styles = {
         },
         texts2:{
             position: 'absolute',
-            right: 40,
+            right: 65,
             bottom:30,
             fontSize:16,
             fontWeight:'bold',
@@ -161,7 +210,7 @@ const styles = {
         },
         texts3:{
             position: 'absolute',
-            right: 80,
+            right: 40,
             bottom:40,
             fontSize:16,
             fontWeight:'bold',
@@ -235,4 +284,15 @@ const styles = {
     },
     
 };
-export default HomeScreen;
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+    list_user: () => dispatch(User()),
+    };
+};
+const mapStateToProps = (state) =>{
+    return {
+        state_user: state.profile
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);

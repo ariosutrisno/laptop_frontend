@@ -1,7 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Splash,Login,Register,WelcomeAuth,HomeScreen,Akun,List,RankingLaptop,ViewData,InputData,RekomendasiLaptop,ViewDataScore,InputDataKebutuhan,DataKriteria,DataAlternatif,DataPerhitungan} from '../pages';
+import { Splash,Login,Register,WelcomeAuth,HomeScreen,Akun,List,RankingLaptop,ViewData,InputData,RekomendasiLaptop,ViewDataScore,InputDataKebutuhan,DataKriteria,DataAlternatif,DataPerhitungan,AppNavigator,Utility,AppNavigatorAlternatif,inputDatalaptop} from '../pages';
 import { BottomTabNavigators } from '../components';
 import EditProfile from '../pages/Akun/editprofile';
 import AboutMe_s from '../pages/AboutMe';
@@ -17,7 +17,7 @@ const MainApp = () => {
     <Tab.Navigator tabBar={props => <BottomTabNavigators {...props} />}>
       <Tab.Screen name="Home" component={HomeScreen}  />
       <Tab.Screen name="List" component={List} />
-      <Tab.Screen name="Ranking" component={RankingLaptop} />
+      <Tab.Screen name="Ranking" component={inputDatalaptop} />
       <Tab.Screen name="Akun" component={Akun} />
     </Tab.Navigator>
   );
@@ -45,6 +45,10 @@ const Router = ({auth}) => {
           headerShown:false,
         }}
         />
+        <Stack.Screen name="Ranking" component={inputDatalaptop} options={{
+          headerShown:false,
+        }}
+        />
         <Stack.Screen name="ViewData" component={ViewData} options={{
           headerShown:false,
         }}
@@ -58,19 +62,27 @@ const Router = ({auth}) => {
           headerShown:false,
         }}
         />
+        <Stack.Screen name="RankingLaptop" component={RankingLaptop} options={{
+          headerShown:false,
+        }}
+        />
         <Stack.Screen name="RekomendasiLaptop" component={RekomendasiLaptop} options={{
           headerShown:false,
         }}
         />
-        <Stack.Screen name="DataKriteria" component={DataKriteria} options={{
+        <Stack.Screen name="DataKriteria" component={AppNavigator} options={{
           headerShown:false,
         }}
         />
-        <Stack.Screen name="DataAlternatif" component={DataAlternatif} options={{
+        <Stack.Screen name="DataAlternatif" component={AppNavigatorAlternatif} options={{
           headerShown:false,
         }}
         />
         <Stack.Screen name="DataPerhitungan" component={DataPerhitungan} options={{
+          headerShown:false,
+        }}
+        />
+        <Stack.Screen name="Utility" component={Utility} options={{
           headerShown:false,
         }}
         />

@@ -1,24 +1,16 @@
 import { Image, Text, View,Button,TextInput,ScrollView,FlatList,TouchableOpacity,Dimensions,Animated } from 'react-native';
-import { Card } from 'react-native-elements';
-import React from 'react';
+import React,{ useEffect, useState } from 'react';
 import { colors } from '../../utils';
-import { ImageDummy,Apple } from '../../assets';
 import { StatusBarPage } from '../../components';
-import faker from 'faker';
-import Dummy from '../List/dummy';
-
+import { FloatingAction } from "react-native-floating-action";
+import {connect} from 'react-redux';
+import {
+    PERHITUNGAN,
+} from '../../config/redux/_actions/_list_data_hitung/data_hitung';
+import axios from 'axios';
+import {API, setAuthToken} from '../../config/Api/Api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const { width, height } = Dimensions.get('screen');
-faker.seed(10); 
-const DATA = [...Array(30).keys()].map((_, i) => {
-    return {
-        key: faker.random.uuid(),
-        image: `https://randomuser.me/api/portraits/${faker.helpers.randomize(['women', 'men'])}/${faker.random.number(60)}.jpg`,
-        name: faker.name.findName(),
-        jobTitle: faker.name.jobTitle(),
-        email: faker.internet.email(),
-    };
-});
-
 
 
 const SPACING = 20;
@@ -26,24 +18,50 @@ const AVATAR_SIZE = 70;
 const ITEM_SIZE = AVATAR_SIZE + SPACING *3;
 
 
-const RangkingLaptop = ({navigation}) =>{
-    const handleGoTo = (screen) =>{
-        navigation.navigate(screen);
-    }
-    const scrollY = React.useRef(new Animated.Value(8)).current;
+
+const RankingLaptop = ({route,perhitungan, perhitungan_state}) =>{
+    const [isloading,setloading] = useState(false)
+    const [isError,setEror] = useState(false)
+    const [isRefresh,setRefresh] = useState(false)
+    const {filter,dataram,dataprocessor,dataharga} = route.params
+    const [datarank,setDatarank] = useState()
+    const fetchData = async() =>{
+            setloading(true)
+            try {
+                const token = await AsyncStorage.getItem('token');
+                setAuthToken(token);
+                const dataRAnk = await API.get(`user/ranking?filter=${filter}&ram=${dataram}&processor=${dataprocessor}&harga=${dataharga}`)
+                console.log('response data=====>>>>', dataRAnk.data.data)
+                setDatarank(dataRAnk.data.data)
+                return dataRAnk.data.data;
+            } catch (error) {
+                console.log(error)
+                setEror(true)
+            }
+            
+            setloading(false)
+        }
+        useEffect(() => {
+            fetchData()
+            
+        }, [])
+        
+        console.log('response dataranking==========================>>>>>>',datarank)
+const scrollY = React.useRef(new Animated.Value(8)).current;
     return(
         <View style={styles.wrapper.pages}>
             <StatusBarPage/>
                 <View style={styles.lineText}>
                     <View style={styles.row}>
-                    <Text style={styles.texts}>Rangking Laptop dan Score</Text>
+                    <Text style={styles.texts}>DATA RANKING</Text>
                     </View>
                 </View>
-                
+
                 <View style={styles.wrapper.components}>
+            
                     <Animated.FlatList
-                        data={Dummy}
-                        keyExtractor={item=>item.key}
+                        data={datarank}
+                        keyExtractor={item=>item.idx_perhitungan.toString()}
                         onScroll={Animated.event(
                             [{nativeEvent: {contentOffset:{y:scrollY}}}],
                             {useNativeDriver:true}
@@ -63,7 +81,29 @@ const RangkingLaptop = ({navigation}) =>{
                                 inputRange,
                                 outputRange:[1,1,1,0]
                             })
-
+                            
+                            // const rank = perhitungan_state?.data?.rank
+                            // const value = rank.sort(function(a, b){return b-a})
+                            // console.log('resp=======>>>>' ,value)
+                            // const rank = perhitungan_state?.data?.rank
+                            // const value = rank.sort(function(a, b){return b-a})
+                            // // Math.max(rank)
+                            // console.log(value);
+                            // const add = {
+                            //     a: 2,
+                            //     b: 2,
+                            //     c: 3
+                            //   }
+                            
+                            //   const total = Object.values(add).reduce((t, n) => t + n)
+                            // const rank = [perhitungan_state?.data?.rank]
+                            // function checkAdult(result) {
+                            //     return result > current;
+                            // }
+                            // const test =current.findIndex(checkAdult)
+                            // console.log(test);
+                            // const current = [...datarank?.rank].sort(function(a, b){return b-a})
+                            // console.log('respon score=====>',current)
                             return <Animated.View style={{flexDirection:'row', padding:SPACING, marginBottom:SPACING, backgroundColor:'#00FF7F', borderRadius:25, 
                             top:25,
                             transform: [{scale}]
@@ -74,15 +114,21 @@ const RangkingLaptop = ({navigation}) =>{
                                     width: AVATAR_SIZE, 
                                     height: AVATAR_SIZE, 
                                     borderRadius: AVATAR_SIZE,
-                                    marginRight: SPACING / 2
+                                    marginRight: SPACING / 2,
                                 }}
                                 
                             />
                             <View>
-                                <Text style={{fontSize:22, fontWeight:'700'}}> {item.name} </Text>
-                                <Text style={{fontSize:18, opacity:.7}}> {item.harga} </Text>
-                                <Text style={{fontSize:18, opacity:.7}} onPress={()=> handleGoTo('ViewDataScore')}> {item.keterangan} </Text>
-                                <Text style={{fontSize:18, opacity:.8, color:'#0099cc'}}>Score: {item.score} </Text>
+                                <Text style={{fontSize:22, fontWeight:'700'}}> No : {item.alternatif}  </Text>
+                                <Text style={{fontSize:18, opacity:.7}}> Nama Laptop : {item.datalaptop} </Text>
+                                <Text style={{fontSize:18, opacity:.7}}> Ram : {item.ram} </Text>
+                                <Text style={{fontSize:18, opacity:.7}}> Processor : {item.processor} </Text>
+                                <Text style={{fontSize:18, opacity:.7}}> Harga : {item.harga} </Text>
+                                <Text style={{fontSize:18, opacity:.7}} > Score : {item.hasil_akhir} </Text>
+                                {/* <Text style={{fontSize:18, opacity:.7}} > Ranking : {current.indexOf(perhitungan_state?.data?.rank[index])+1} </Text>
+                                {/* <Text style={{fontSize:18, opacity:.8, color:'#0099cc'}} onPress={()=> handleGoTo('ViewData')}>
+                                    selengkapnya...
+                                </Text> */}
                             </View>
                             </Animated.View>
                         }}
@@ -115,7 +161,6 @@ const styles = {
         fontWeight:'bold',
         fontSize: 20,
         fontFamily:'times',
-        textAlign: 'center',
         color:colors.White,
 
         
@@ -156,4 +201,14 @@ const styles = {
     },
     
 };
-export default RangkingLaptop;
+const mapDispatchToProps = (dispatch) => {
+    return {
+    perhitungan: () => dispatch(PERHITUNGAN()),
+    };
+};
+const mapStateToProps = (state) =>{
+    return {
+        perhitungan_state: state.perhitungan
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(RankingLaptop);

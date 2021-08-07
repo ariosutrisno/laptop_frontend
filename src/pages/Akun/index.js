@@ -2,11 +2,37 @@ import { Image, Text, View,ScrollView,Alert } from 'react-native';
 import React from 'react';
 import { colors } from '../../utils';
 import { Circles,ImageDummy } from '../../assets';
-import { User,LogOut,AboutMe } from '../../assets';
-import {logout} from '../../config/redux/_actions/_auth/auth';
+import { LogOut,AboutMe } from '../../assets';
+import {logout,User} from '../../config/redux/_actions/_auth/auth';
 import {connect} from 'react-redux';
 
 class Akun extends React.Component{
+    constructor() {
+        super();
+        this.state = {
+          data: [],
+          disabled: true,
+          submit: false,
+          loading: false,
+          checked: false,
+        };
+      }
+    
+      getData = async () => {
+        const data = await this.props.list_user();
+        this.setState({
+          data: data.value,
+          loading: false,
+        });
+      };
+    
+      componentDidMount() {
+        this.setState({
+          loading: true,
+        });
+        this.getData();
+      }
+    
     Logout = () => {
         this.props.logout();
       };
@@ -17,7 +43,14 @@ class Akun extends React.Component{
         this.props.navigation.navigate('AboutMe');
       };
     render() {
-
+        const {
+            data,
+            loading,
+            disabled,
+            submit,
+            checked,
+          } = this.state;
+        //   console.log('data======>>>>',data)
         return(
             <View style={styles.wrapper.pages}>
             <ScrollView showsVerticalScrollIndicator={false}>
@@ -26,19 +59,19 @@ class Akun extends React.Component{
                     <View style={styles.indexx}>
                     <View style={styles.box}>
                         <Text style={{color:'grey',fontSize:10, marginLeft:10}}>Name</Text>
-                        <Text style={{color:'black',fontSize:12,marginLeft:10}}>Ario Sutrisno</Text>
+                        <Text style={{color:'black',fontSize:12,marginLeft:10}}>{data.name}</Text>
                     </View>
                     <View style={styles.space(20)}/>
                     <View style={styles.box}>
                         <Text style={{color:'grey',fontSize:10, marginLeft:10,}}>Email</Text>
-                        <Text style={{color:'black',fontSize:12, marginLeft:10}}>Sutrisno@gmail.com</Text>
+                        <Text style={{color:'black',fontSize:12, marginLeft:10}}>{data.email}</Text>
                     </View>
                 </View>
                 <View style={styles.sets}>
-                    <View style={{flexDirection: 'row'}}>
+                    {/* <View style={{flexDirection: 'row'}}>
                         <User width={25} height={25}/>
                         <Text  onPress={this.EditProfile} style={{color:'black',fontSize:16, marginLeft:10}}> Edit Profile </Text>
-                    </View>
+                    </View> */}
                     <View style={styles.space(50)}/>
                     <View style={{flexDirection: 'row'}}>
                         <AboutMe width={25} height={25}/>
@@ -115,12 +148,14 @@ const styles = {
 const mapStateToProps = (state) => {
     return {
       auth: state.auth,
+      state_user: state.profile
     };
   };
   
   const mapDispatchToProps = (dispatch) => {
     return {
       logout: () => dispatch(logout()),
+      list_user: () => dispatch(User())
     };
   };
 export default connect(mapStateToProps, mapDispatchToProps)(Akun);

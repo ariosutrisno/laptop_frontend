@@ -1,46 +1,55 @@
 import { Image, Text, View,Button,TextInput,ScrollView,FlatList,TouchableOpacity,Dimensions,Animated } from 'react-native';
-import React from 'react';
+import React ,{ useEffect, useState }from 'react';
 import { colors } from '../../utils';
 import { StatusBarPage } from '../../components';
-import faker from 'faker';
 import DummyLaptop from '../DataRekomendasi/DummyLaptop';
 import { FloatingAction } from "react-native-floating-action";
+import {connect} from 'react-redux';
+import {
+    list_req,
+} from '../../config/redux/_actions/_rekomen/rekomen';
 
 
-
-
-const actions = [
-        {
-        text: "create data",
-        icon: require("../../assets/illustrations/create.png"),
-        name: "create",
-        position: 1
-        },
-    
-    ];
 const { width, height } = Dimensions.get('screen');
-faker.seed(10); 
-const DATA = [...Array(30).keys()].map(( Dummy) => {
-    return {
-        key: faker.random.uuid(),
-        image: '',
-        name: faker.name.findName(),
-        jobTitle: faker.name.jobTitle(),
-        email: faker.internet.email(),
-    };
-});
+
 
 const SPACING = 20;
 const AVATAR_SIZE = 70;
 const ITEM_SIZE = AVATAR_SIZE + SPACING *3;
 
+const actions = [
+    {
+    text: "create data",
+    icon: require("../../assets/illustrations/create.png"),
+    name: "create",
+    position: 1
+    },
 
+];
 
-const RekomendasiLaptop = ({navigation}) =>{
+const RekomendasiLaptop = ({navigation,state_rekomen,list_rekomen}) =>{
 
     const handleGoTo = (screen) =>{
         navigation.navigate(screen);
     }
+    const [isloading,setloading] = useState(false)
+    const [isError,setEror] = useState(false)
+    const [isRefresh,setRefresh] = useState(false)
+
+    const fetchData = async() =>{
+        setloading(true)
+        try {
+            const response = await list_rekomen()
+        } catch (error) {
+            setEror(true)
+        }
+        
+        setloading(false)
+    }
+    useEffect(() => {
+        fetchData()
+    }, [])
+    // console.log('response=============>>>>',state_rekomen.data)
 const scrollY = React.useRef(new Animated.Value(8)).current;
     return(
         <View style={styles.wrapper.pages}>
@@ -54,8 +63,8 @@ const scrollY = React.useRef(new Animated.Value(8)).current;
                 <View style={styles.wrapper.components}>
                
                     <Animated.FlatList
-                        data={DummyLaptop}
-                        keyExtractor={item=>item.key}
+                        data={state_rekomen.data}
+                        keyExtractor={item=>item.idx_rekomendasi.toString()}
                         onScroll={Animated.event(
                             [{nativeEvent: {contentOffset:{y:scrollY}}}],
                             {useNativeDriver:true}
@@ -91,8 +100,8 @@ const scrollY = React.useRef(new Animated.Value(8)).current;
                                 
                             />
                             <View>
-                                <Text style={{fontSize:22, fontWeight:'700'}}> {item.name} </Text>
-                                <Text style={{fontSize:18, opacity:.7}}> {item.harga} </Text>
+                                <Text style={{fontSize:22, fontWeight:'700'}}> Merek Laptop : {item.merek_laptop} </Text>
+                                <Text style={{fontSize:18, opacity:.7}}> Harga Laptop : {item.harga_laptop} </Text>
                                 <Text style={{fontSize:18, opacity:.5, color:'#FF0000', fontWeight:'bold', left:200}}> Hapus </Text>
                             </View>
                             </Animated.View>
@@ -171,4 +180,15 @@ const styles = {
     },
     
 };
-export default RekomendasiLaptop;
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+    list_rekomen: () => dispatch(list_req()),
+    };
+};
+const mapStateToProps = (state) =>{
+    return {
+        state_rekomen: state.rekomen
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(RekomendasiLaptop);

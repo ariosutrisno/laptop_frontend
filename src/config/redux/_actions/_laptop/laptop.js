@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {API, setAuthToken} from '../../../api/API';
+import {API, setAuthToken} from '../../../Api/Api';
 import {
     GET_LIST_LAPTOP,
     GET_DETAIL_LAPTOP,

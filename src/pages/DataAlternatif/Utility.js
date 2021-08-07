@@ -4,7 +4,7 @@ import { colors } from '../../utils';
 import { StatusBarPage } from '../../components';
 import { DataTable } from 'react-native-paper';
 import {
-    Alternatif,
+    UTILITY,
 } from '../../config/redux/_actions/_list_data_hitung/data_hitung';
 
 import {connect} from 'react-redux';
@@ -12,10 +12,10 @@ import {connect} from 'react-redux';
 
 
 
-const DataAlternatif = ({list_Alternatif,alternatif_state}) =>{
+const Utility = ({list_Utility,utility_state}) =>{
     /*
     *
-    * DATA GET ALTERNATIF 
+    * DATA GET Utility 
     */
    
 // const optionsPerPage = [alternatif_state.data];
@@ -25,7 +25,7 @@ const [isRefresh,setRefresh] = useState(false)
 const fetchData = async() =>{
     setloading(true)
     try {
-        const response = await list_Alternatif()
+        const response = await list_Utility()
     } catch (error) {
         setEror(true)
     }
@@ -35,19 +35,20 @@ const fetchData = async() =>{
 useEffect(() => {
     fetchData()
 }, [])
-// console.log('response=====>>>>',alternatif_state)
-const [page, setPage] = React.useState(alternatif_state.data[0]);
-const [itemsPerPage, setItemsPerPage] = React.useState(alternatif_state.data[0]);
+// console.log('respons data========>>>>', utility_state.data.alternatif)
+// const [page, setPage] = React.useState(alternatif_state.data[0]);
+// const [itemsPerPage, setItemsPerPage] = React.useState(alternatif_state.data[0]);
 
-  React.useEffect(() => {
-    setPage(0);
-  }, [itemsPerPage]);
+//   React.useEffect(() => {
+//     setPage(0);
+//   }, [itemsPerPage]);
+// console.log('data res',utility_state.data.alternatif)
     return(
         <View style={styles.wrapper.pages}>
             <StatusBarPage/>
                 <View style={styles.lineText}>
                     <View style={styles.row}>
-                    <Text style={styles.texts}>DATA ALTERNATIF</Text>
+                    <Text style={styles.texts}>NILAI UTILITY</Text>
                     </View>
                 </View>
                 <View style={styles.wrapper.components}>
@@ -55,7 +56,6 @@ const [itemsPerPage, setItemsPerPage] = React.useState(alternatif_state.data[0])
                         <DataTable>
                             <DataTable.Header>
                                 <DataTable.Title >Alternatif</DataTable.Title>
-                                <DataTable.Title >Merk Laptop</DataTable.Title>
                                 <DataTable.Title >c1</DataTable.Title>
                                 <DataTable.Title >c2</DataTable.Title>
                                 <DataTable.Title >c3</DataTable.Title>
@@ -63,16 +63,15 @@ const [itemsPerPage, setItemsPerPage] = React.useState(alternatif_state.data[0])
                                 <DataTable.Title >c5</DataTable.Title>
                                 <DataTable.Title >c6</DataTable.Title>
                             </DataTable.Header>
-                            {alternatif_state.data.map((item, key) => (
+                            {utility_state.data.alternatif.map((item, key) => (
                             <DataTable.Row key={key}>
-                                <DataTable.Cell>{item.alternatif}</DataTable.Cell>
-                                <DataTable.Cell>{item.datalaptop}</DataTable.Cell>
-                                <DataTable.Cell>{item.c1}</DataTable.Cell>
-                                <DataTable.Cell>{item.c2}</DataTable.Cell>
-                                <DataTable.Cell>{item.c3}</DataTable.Cell>
-                                <DataTable.Cell>{item.c4}</DataTable.Cell>
-                                <DataTable.Cell>{item.c5}</DataTable.Cell>
-                                <DataTable.Cell>{item.c6}</DataTable.Cell>
+                                <DataTable.Cell> { item.alternatif} </DataTable.Cell>
+                                <DataTable.Cell> {((item.c1 - utility_state.data.min1) / (utility_state.data.max1 - utility_state.data.min1)).toFixed(3) } </DataTable.Cell>
+                                <DataTable.Cell> {((item.c2 - utility_state.data.min2) / (utility_state.data.max2 - utility_state.data.min2)).toFixed(3) } </DataTable.Cell>
+                                <DataTable.Cell> {((item.c3 - utility_state.data.min3) / (utility_state.data.max3 - utility_state.data.min3)).toFixed(3) } </DataTable.Cell>
+                                <DataTable.Cell> {((item.c4 - utility_state.data.min4) / (utility_state.data.max4 - utility_state.data.min4)).toFixed(3) } </DataTable.Cell>
+                                <DataTable.Cell> {((item.c5 - utility_state.data.min5) / (utility_state.data.max5 - utility_state.data.min5)).toFixed(3) } </DataTable.Cell>
+                                <DataTable.Cell> {((item.c6 - utility_state.data.min6) / (utility_state.data.max6 - utility_state.data.min6)).toFixed(3) } </DataTable.Cell>
                             </DataTable.Row>
                             ))}
                             {/* <DataTable.Pagination
@@ -161,13 +160,13 @@ const styles = {
 };
 const mapDispatchToProps = (dispatch) => {
     return {
-    list_Alternatif: () => dispatch(Alternatif()),
+    list_Utility: () => dispatch(UTILITY()),
     };
 };
 const mapStateToProps = (state) =>{
     return {
-        alternatif_state: state.alternatif
+        utility_state: state.utility
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DataAlternatif);
+export default connect(mapStateToProps, mapDispatchToProps)(Utility);

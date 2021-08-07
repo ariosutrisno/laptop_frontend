@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ToastAndroid} from 'react-native';
 import {API, setAuthToken} from '../../../Api/Api' ;
-import {LOGIN, LOGOUT, REGISTER} from '../../../constants/constants';
+import {LOGIN, LOGOUT, REGISTER,GET_AUTH} from '../../../constants/constants';
 
 export const login = (data) =>{
     return{
@@ -69,6 +69,18 @@ export const logout = () => {
         return ress;
         }
         ToastAndroid.show('Logout Gagal', ToastAndroid.CENTER);
+    },
+    };
+};
+  
+export const User = () => {
+    return {
+    type: GET_AUTH,
+    payload: async () => {
+        const token = await AsyncStorage.getItem('token');
+      setAuthToken(token);
+      const res = await API.get('user/profile');
+      return res.data.data;
     },
     };
 };

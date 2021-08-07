@@ -6,6 +6,8 @@ import {
     GET_LIST_ALTERNATIF,
     GET_LIST_UTILITY,
     GET_LIST_RANKING,
+    GET_LIST_PERHITUNGAN,
+    GET_ALL_RANKING
 } from '../../../constants/constants';
 
 
@@ -16,7 +18,7 @@ export const Kriteria = () => {
     payload: async () => {
       const token = await AsyncStorage.getItem('token');
       setAuthToken(token);
-      const res = await API.get('user/dataKriteria');
+      const res = await API.get('user/datakriteria');
       return res.data.data;
     },
   };
@@ -60,6 +62,18 @@ export const UTILITY = () => {
     },
   };
 };
+/* PERHITUNGAN */
+export const PERHITUNGAN = () => {
+  return {
+    type: GET_LIST_PERHITUNGAN,
+    payload: async () => {
+      const token = await AsyncStorage.getItem('token',);
+      setAuthToken(token);
+      const res = await API.get('user/utility');
+      return res.data.data;
+    },
+  };
+};
 
 /* RANKING */
 export const RANKING = () => {
@@ -73,4 +87,18 @@ export const RANKING = () => {
     },
   };
 };
+
+/* RANKING */
+export const RANKING_ALL = () => {
+  return {
+    type: GET_ALL_RANKING,
+    payload: async () => {
+      const token = await AsyncStorage.getItem('token');
+      setAuthToken(token);
+      const res = await API.get('user/ranking/all');
+      return res.data.data;
+    },
+  };
+};
+
 

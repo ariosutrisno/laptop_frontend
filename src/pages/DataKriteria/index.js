@@ -2,16 +2,12 @@ import { Image, Text, View,Button,TextInput,ScrollView,FlatList,TouchableOpacity
 import React,{ useEffect, useState }  from 'react';
 import { colors } from '../../utils';
 import { StatusBarPage } from '../../components';
-import DummyKriteria from './dummy';
-import {connect, useDispatch} from 'react-redux';
+import {connect} from 'react-redux';
 import {
     Kriteria,
 } from '../../config/redux/_actions/_list_data_hitung/data_hitung';
+import {createAppContainer} from 'react-navigation'
 
-const defaultKriteria = {
-    status:"oke",
-    list_kriteria:[]
-}
 const DataKriteria = ({list_kriteria,dd}) =>{
     /* 
     * data
@@ -19,7 +15,6 @@ const DataKriteria = ({list_kriteria,dd}) =>{
     * isEror
     * isRefresh
     */
-    const [data,setData] = useState(defaultKriteria)
     const [isloading,setloading] = useState(false)
     const [isError,setEror] = useState(false)
     const [isRefresh,setRefresh] = useState(false)
@@ -40,6 +35,7 @@ const DataKriteria = ({list_kriteria,dd}) =>{
         
             fetchData()
         }, [])
+        // console.log('response============>>>>',dd)
     return(
         <View style={styles.wrapper.pages}>
             <StatusBarPage/>
@@ -86,7 +82,7 @@ const DataKriteria = ({list_kriteria,dd}) =>{
                                 }}
                             />
                             <View>
-                                <Text style={{fontSize:14, fontWeight:'700'}}> ID_KRITERIA : {item.kriteria_id} </Text>
+                                <Text style={{fontSize:14, fontWeight:'700'}}> ID KRITERIA : {item.kriteria_id} </Text>
                                 <Text style={{fontSize:14, opacity:.7, fontWeight:'700'}}> NAMA KRITERIA : {item.nama_kriteria}</Text>
                                 <Text style={{fontSize:14, opacity:.7,fontWeight:'700',color:'black'}}> BOBOT : {item.bobot}</Text>
                             </View>
