@@ -1,0 +1,1 @@
+export const imageAPI = (item) => {`https://adminproject.site${item}`}

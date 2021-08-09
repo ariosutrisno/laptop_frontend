@@ -18,4 +18,5 @@ import Utility from './Utility/utility';
 import AppNavigator from './DataKriteria/AppNavigatorSwipe';
 import AppNavigatorAlternatif from './DataAlternatif/AppNavigatorSwipe';
 import inputDatalaptop from './InputData/InputRadioButton/inputDatalaptop';
-export { Splash, Login, Register, WelcomeAuth,HomeScreen,Akun,List,RankingLaptop,ViewData,InputData,RekomendasiLaptop,ViewDataScore,InputDataKebutuhan,DataKriteria,DataAlternatif,DataPerhitungan,AppNavigator,Utility,AppNavigatorAlternatif,inputDatalaptop};
+import DetailLaptop from './List/detail_laptop';
+export { Splash, Login, Register, WelcomeAuth,HomeScreen,Akun,List,RankingLaptop,ViewData,InputData,RekomendasiLaptop,ViewDataScore,InputDataKebutuhan,DataKriteria,DataAlternatif,DataPerhitungan,AppNavigator,Utility,AppNavigatorAlternatif,inputDatalaptop,DetailLaptop};

@@ -3,8 +3,6 @@ import { Card } from 'react-native-elements';
 import React,{ useEffect, useState }  from 'react';
 import { colors } from '../../utils';
 import { StatusBarPage } from '../../components';
-import Dummy from '../List/dummy';
-import { FloatingAction } from "react-native-floating-action";
 import {connect} from 'react-redux';
 import {
     getlistlaptop,
@@ -14,19 +12,16 @@ const { width, height } = Dimensions.get('screen');
 const SPACING = 20;
 const AVATAR_SIZE = 70;
 const ITEM_SIZE = AVATAR_SIZE + SPACING *3;
-const actions = [
-    {
-    text: "filter laptop",
-    icon: require("../../assets/illustrations/create.png"),
-    name: "create",
-    position: 1
-    },
 
-];
 
 const List = ({navigation,list_laptop,state_laptop}) =>{
-    const handleGoTo = (screen) =>{
-        navigation.navigate(screen);
+    const handleGoTo = (screen,item) =>{
+        navigation.navigate(screen,item);
+    }
+
+    const detail_laptop = (item) =>{
+        handleGoTo('DetailLaptop',item)
+        // console.log('data laptop perID ====>',item)
     }
     const [isloading,setloading] = useState(false)
     const [isError,setEror] = useState(false)
@@ -35,6 +30,7 @@ const List = ({navigation,list_laptop,state_laptop}) =>{
         setloading(true)
         try {
             const response = await list_laptop()
+            // console.log('daataa==>',response)
         } catch (error) {
             setEror(true)
         }
@@ -42,7 +38,6 @@ const List = ({navigation,list_laptop,state_laptop}) =>{
         setloading(false)
     }
     useEffect(() => {
-    // console.log('response===================>>>>', state_laptop)
         fetchData()
     }, [])
 const scrollY = React.useRef(new Animated.Value(8)).current;
@@ -78,34 +73,27 @@ const scrollY = React.useRef(new Animated.Value(8)).current;
                                 inputRange,
                                 outputRange:[1,1,1,0]
                             })
-
                             return <Animated.View style={{flexDirection:'row', padding:SPACING, marginBottom:SPACING, backgroundColor:'#00FF7F', borderRadius:25, 
                             top:25,
                             transform: [{scale}]
                             }}>
                             <Image
-                                source={item.imageUrl}
+                                source={{ uri:`https://adminproject.site/${item.gambar}` }}
                                 style={{ 
                                     width: AVATAR_SIZE, 
                                     height: AVATAR_SIZE, 
                                     borderRadius: AVATAR_SIZE,
                                     marginRight: SPACING / 2,
                                 }}
-                                
                             />
                             <View>
                                 <Text style={{fontSize:22, fontWeight:'700'}}> Nama Laptop :  {item.merek_laptop} </Text>
-                                <Text style={{fontSize:18, opacity:.7}}> harga laptop {item.harga} </Text>
-                                <Text style={{fontSize:18, opacity:.8, color:'#0099cc'}} onPress={()=> handleGoTo('ViewData')}> selengkapnya... </Text>
+                                <Text style={{fontSize:18, opacity:.7}}> harga laptop : {item.harga} </Text>
+                                <Text style={{fontSize:18, opacity:.8, color:'#0099cc'}} onPress={()=> detail_laptop(item)}> selengkapnya... </Text>
                             </View>
                             </Animated.View>
                         }}
                     />
-                    {/* <FloatingAction
-                    actions={actions}
-                    onPressItem={() => handleGoTo('inputDatalaptop')}
-                    color={'red'}
-                /> */}
                 </View>
         </View>
     );

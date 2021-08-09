@@ -1,7 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Splash,Login,Register,WelcomeAuth,HomeScreen,Akun,List,RankingLaptop,ViewData,InputData,RekomendasiLaptop,ViewDataScore,InputDataKebutuhan,DataKriteria,DataAlternatif,DataPerhitungan,AppNavigator,Utility,AppNavigatorAlternatif,inputDatalaptop} from '../pages';
+import { Splash,Login,Register,WelcomeAuth,HomeScreen,Akun,List,RankingLaptop,ViewData,InputData,RekomendasiLaptop,ViewDataScore,InputDataKebutuhan,DataKriteria,DataAlternatif,DataPerhitungan,AppNavigator,Utility,AppNavigatorAlternatif,inputDatalaptop,DetailLaptop} from '../pages';
 import { BottomTabNavigators } from '../components';
 import EditProfile from '../pages/Akun/editprofile';
 import AboutMe_s from '../pages/AboutMe';
@@ -50,6 +50,10 @@ const Router = ({auth}) => {
         }}
         />
         <Stack.Screen name="ViewData" component={ViewData} options={{
+          headerShown:false,
+        }}
+        />
+        <Stack.Screen name="DetailLaptop" component={DetailLaptop} options={{
           headerShown:false,
         }}
         />

@@ -1,16 +1,15 @@
 import { Image, Text, View,ScrollView,Dimensions,ActivityIndicator } from 'react-native';
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import { colors } from '../../utils';
 import Carousel from './Corousel'
-import { DummyData } from './Data/dummy'
+import { DummyData } from '../ViewData/Data/dummy'
+// import {DummyData} from './DataDummy/dummy'
+import {imageAPI} from './image'
 import { StatusBarPage } from '../../components';
-import {connect} from 'react-redux';
 const { width, height } = Dimensions.get('screen');
-const ViewData = ({route}) =>{
-    const {idx_datalaptop} = route.params
-    console.log('res data====>',idx_datalaptop)
+const DetailLaptop = ({route}) =>{
+    console.log('data keluar dari database=======>', route.params)
     return(
-        
         <View style={styles.Pages.Container}>
             <StatusBarPage/>
             <View style={styles.Pages.ContentImg}>
@@ -18,14 +17,16 @@ const ViewData = ({route}) =>{
             </View>
             <View style={styles.Pages.ContentSpec}>
                 <View style={styles.pagesText}>
-                    <Text style={styles.Text.one}>Macbook pro 16</Text>
-                    <Text style={styles.Text.two}>Apple</Text>
-                    <Text style={styles.Text.three}>Rp 5.000.000</Text>
+                    <Text style={styles.Text.one}>{route.params.tipe}</Text>
+                    <Text style={styles.Text.two}>{route.params.merek_laptop}</Text>
+                    <Text style={styles.Text.three}>{route.params.harga}</Text>
                     <Text style={styles.Text.four}>Spesifikasi</Text>
-                    <Text style={styles.Text.five}>
-                        - diplay layar : 4k
-                        - storage : 1TBsadsafndskjfnkdsjndasjkdnsajnksndkjsdasdsaaskflnsdjkfnkjnfkaslkndskfnkdsxzc sdknfkdsjfnksjfnksxmcv dsbkdsjfjndslnfdsknfkdsnfdskfnksdnfkdsnfds cksdnfjdsnksnkdsnfdsm csdnckdslnfkndawwndkscxzcxmvdskfhkdsnfkdsnfksdfnds dsknfsadsjfksdjfksjdsaldjlsadjas
-                    </Text>
+                    <Text style={styles.Text.five}>Ram : {route.params.ram}</Text>
+                    <Text style={styles.Text.five}>Processor : {route.params.processor}</Text>
+                    <Text style={styles.Text.five}>Display : {route.params.display}</Text>
+                    <Text style={styles.Text.five}>Storage : {route.params.storage}</Text>
+                    <Text style={styles.Text.five}>Vga Card : {route.params.vga_card}</Text>
+                    <Text style={styles.Text.five}>Harga : {route.params.harga}</Text>
                 </View>
             </View>
         </View>
@@ -80,8 +81,8 @@ const styles = {
             fontSize:20,
             fontWeight:'bold',
             fontFamily:'times',
-            left:width - 150,
-            top:20,
+            left:width - 240,
+            top:40,
             position: 'absolute',
             opacity:.6,
         },
@@ -99,16 +100,12 @@ const styles = {
             fontWeight:'bold',
             fontFamily:'times',
             top:40,
-            maxWidth: 400,
+            right:10,
             textAlign:'justify'
         },
     }
 
 };
 
-const mapStateToProps = (state) => {
-    return {
-      detailLaptop: state.detail_laptop,
-    };
-  };
-export default connect(mapStateToProps, null)(ViewData);
+
+export default DetailLaptop;

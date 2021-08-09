@@ -10,6 +10,7 @@ import rekomen from './rekomen/rekomen'
 import profile from './auth/profile'
 import filter from './datalaptop/filter'
 import rankingAll from './perhitungan/rankingALL'
+import detail_laptop from './datalaptop/detail_laptop'
 export default {
 auth,
 datakriteria,
@@ -22,5 +23,6 @@ datalaptop,
 rekomen,
 profile,
 filter,
-rankingAll
+rankingAll,
+detail_laptop,
 };

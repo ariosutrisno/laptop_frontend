@@ -1,12 +1,11 @@
-import { Image, Text, View,Button,TextInput,ScrollView,FlatList,TouchableOpacity,Dimensions,Animated } from 'react-native';
+import { Image, Text, View,Button,TextInput,ScrollView,FlatList,TouchableOpacity,Dimensions,Animated,Alert } from 'react-native';
 import React ,{ useEffect, useState }from 'react';
 import { colors } from '../../utils';
 import { StatusBarPage } from '../../components';
-import DummyLaptop from '../DataRekomendasi/DummyLaptop';
 import { FloatingAction } from "react-native-floating-action";
 import {connect} from 'react-redux';
 import {
-    list_req,
+    list_req,delete_req
 } from '../../config/redux/_actions/_rekomen/rekomen';
 
 
@@ -27,19 +26,21 @@ const actions = [
 
 ];
 
-const RekomendasiLaptop = ({navigation,state_rekomen,list_rekomen}) =>{
+const RekomendasiLaptop = ({navigation,state_rekomen,list_rekomen,delete_rekomen}) =>{
 
     const handleGoTo = (screen) =>{
         navigation.navigate(screen);
     }
+    
     const [isloading,setloading] = useState(false)
     const [isError,setEror] = useState(false)
     const [isRefresh,setRefresh] = useState(false)
-
-    const fetchData = async() =>{
+    
+    const fetchData = async(item) =>{
         setloading(true)
         try {
             const response = await list_rekomen()
+            await delete_rekomen(item.idx_rekomendasi)
         } catch (error) {
             setEror(true)
         }
@@ -49,7 +50,7 @@ const RekomendasiLaptop = ({navigation,state_rekomen,list_rekomen}) =>{
     useEffect(() => {
         fetchData()
     }, [])
-    // console.log('response=============>>>>',state_rekomen.data)
+    
 const scrollY = React.useRef(new Animated.Value(8)).current;
     return(
         <View style={styles.wrapper.pages}>
@@ -102,7 +103,22 @@ const scrollY = React.useRef(new Animated.Value(8)).current;
                             <View>
                                 <Text style={{fontSize:22, fontWeight:'700'}}> Merek Laptop : {item.merek_laptop} </Text>
                                 <Text style={{fontSize:18, opacity:.7}}> Harga Laptop : {item.harga_laptop} </Text>
-                                <Text style={{fontSize:18, opacity:.5, color:'#FF0000', fontWeight:'bold', left:200}}> Hapus </Text>
+                                <TouchableOpacity onPress={() => 
+                                    Alert.alert(
+                                        'Peringatan', 'Anda Yakin ingin menghapus data ini?',
+                                        [{
+                                            text: 'Tidak',
+                                            cancelable: true,
+                                        },
+                                        {
+                                            text:'Ya',
+                                            onPress: ()=> fetchData(item)
+                                        }
+                                    ]
+
+                                    )}>
+                                    <Text style={{fontSize:18, opacity:.5, color:'#FF0000', fontWeight:'bold', left:200}}> Hapus </Text>
+                                </TouchableOpacity>
                             </View>
                             </Animated.View>
                         }}
@@ -184,6 +200,7 @@ const styles = {
 const mapDispatchToProps = (dispatch) => {
     return {
     list_rekomen: () => dispatch(list_req()),
+    delete_rekomen: (idx_rekomendasi) => dispatch(delete_req(idx_rekomendasi)),
     };
 };
 const mapStateToProps = (state) =>{

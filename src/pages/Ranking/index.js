@@ -2,12 +2,10 @@ import { Image, Text, View,Button,TextInput,ScrollView,FlatList,TouchableOpacity
 import React,{ useEffect, useState } from 'react';
 import { colors } from '../../utils';
 import { StatusBarPage } from '../../components';
-import { FloatingAction } from "react-native-floating-action";
 import {connect} from 'react-redux';
 import {
     PERHITUNGAN,
 } from '../../config/redux/_actions/_list_data_hitung/data_hitung';
-import axios from 'axios';
 import {API, setAuthToken} from '../../config/Api/Api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const { width, height } = Dimensions.get('screen');
