@@ -82,7 +82,7 @@ export const RANKING = () => {
     payload: async () => {
       const token = await AsyncStorage.getItem('token');
       setAuthToken(token);
-      const res = await API.get('user/ranking');
+      const res = await API.get('user/filter');
       return res.data.data;
     },
   };

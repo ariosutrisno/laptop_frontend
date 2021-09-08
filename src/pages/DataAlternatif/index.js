@@ -56,23 +56,23 @@ const [itemsPerPage, setItemsPerPage] = React.useState(alternatif_state.data[0])
                             <DataTable.Header>
                                 <DataTable.Title >Alternatif</DataTable.Title>
                                 <DataTable.Title >Merk Laptop</DataTable.Title>
-                                <DataTable.Title >c1</DataTable.Title>
-                                <DataTable.Title >c2</DataTable.Title>
-                                <DataTable.Title >c3</DataTable.Title>
-                                <DataTable.Title >c4</DataTable.Title>
-                                <DataTable.Title >c5</DataTable.Title>
-                                <DataTable.Title >c6</DataTable.Title>
+                                <DataTable.Title >RAM</DataTable.Title>
+                                <DataTable.Title >PROCESSOR</DataTable.Title>
+                                <DataTable.Title >DISPLAY</DataTable.Title>
+                                <DataTable.Title >STORAGE</DataTable.Title>
+                                <DataTable.Title >VGA CARD</DataTable.Title>
+                                <DataTable.Title >HARGA</DataTable.Title>
                             </DataTable.Header>
-                            {alternatif_state.data.map((item, key) => (
+                            {alternatif_state?.data.map((item, key) => (
                             <DataTable.Row key={key}>
                                 <DataTable.Cell>{item.alternatif}</DataTable.Cell>
-                                <DataTable.Cell>{item.datalaptop}</DataTable.Cell>
-                                <DataTable.Cell>{item.c1}</DataTable.Cell>
-                                <DataTable.Cell>{item.c2}</DataTable.Cell>
-                                <DataTable.Cell>{item.c3}</DataTable.Cell>
-                                <DataTable.Cell>{item.c4}</DataTable.Cell>
-                                <DataTable.Cell>{item.c5}</DataTable.Cell>
-                                <DataTable.Cell>{item.c6}</DataTable.Cell>
+                                <DataTable.Cell>{item.merek_laptop}</DataTable.Cell>
+                                <DataTable.Cell>{item.nilai_ram}</DataTable.Cell>
+                                <DataTable.Cell>{item.nilai_processor}</DataTable.Cell>
+                                <DataTable.Cell>{item.nilai_display}</DataTable.Cell>
+                                <DataTable.Cell>{item.nilai_storage}</DataTable.Cell>
+                                <DataTable.Cell>{item.nilai_vga}</DataTable.Cell>
+                                <DataTable.Cell>{item.nilai_harga}</DataTable.Cell>
                             </DataTable.Row>
                             ))}
                             {/* <DataTable.Pagination

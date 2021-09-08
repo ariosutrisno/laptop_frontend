@@ -25,7 +25,7 @@ const [isRefresh,setRefresh] = useState(false)
 const fetchData = async() =>{
     setloading(true)
     try {
-        const response = await list_Utility()
+        await list_Utility()
     } catch (error) {
         setEror(true)
     }
@@ -33,16 +33,14 @@ const fetchData = async() =>{
     setloading(false)
 }
 useEffect(() => {
-    fetchData()
+    let isSubscribed = true
+    if (isSubscribed) {
+        fetchData()
+      }
+      return () => isSubscribed = false
 }, [])
-// console.log('respons data========>>>>', utility_state.data.alternatif)
-// const [page, setPage] = React.useState(alternatif_state.data[0]);
-// const [itemsPerPage, setItemsPerPage] = React.useState(alternatif_state.data[0]);
 
-//   React.useEffect(() => {
-//     setPage(0);
-//   }, [itemsPerPage]);
-// console.log('data res',utility_state.data.alternatif)
+console.log('data res========================>>',utility_state.data.alternatif)
     return(
         <View style={styles.wrapper.pages}>
             <StatusBarPage/>
@@ -56,35 +54,24 @@ useEffect(() => {
                         <DataTable>
                             <DataTable.Header>
                                 <DataTable.Title >Alternatif</DataTable.Title>
-                                <DataTable.Title >c1</DataTable.Title>
-                                <DataTable.Title >c2</DataTable.Title>
-                                <DataTable.Title >c3</DataTable.Title>
-                                <DataTable.Title >c4</DataTable.Title>
-                                <DataTable.Title >c5</DataTable.Title>
-                                <DataTable.Title >c6</DataTable.Title>
+                                <DataTable.Title >RAM</DataTable.Title>
+                                <DataTable.Title >PROCESSOR</DataTable.Title>
+                                <DataTable.Title >DISPLAY</DataTable.Title>
+                                <DataTable.Title >STORAGE</DataTable.Title>
+                                <DataTable.Title >VGA CARD</DataTable.Title>
+                                <DataTable.Title >HARGA</DataTable.Title>
                             </DataTable.Header>
-                            {utility_state.data.alternatif.map((item, key) => (
-                            <DataTable.Row key={key}>
+                            {utility_state?.data?.alternatif?.map((item,key) => (
+                            <DataTable.Row key={key.toString()}>
                                 <DataTable.Cell> { item.alternatif} </DataTable.Cell>
-                                <DataTable.Cell> {((item.c1 - utility_state.data.min1) / (utility_state.data.max1 - utility_state.data.min1)).toFixed(3) } </DataTable.Cell>
-                                <DataTable.Cell> {((item.c2 - utility_state.data.min2) / (utility_state.data.max2 - utility_state.data.min2)).toFixed(3) } </DataTable.Cell>
-                                <DataTable.Cell> {((item.c3 - utility_state.data.min3) / (utility_state.data.max3 - utility_state.data.min3)).toFixed(3) } </DataTable.Cell>
-                                <DataTable.Cell> {((item.c4 - utility_state.data.min4) / (utility_state.data.max4 - utility_state.data.min4)).toFixed(3) } </DataTable.Cell>
-                                <DataTable.Cell> {((item.c5 - utility_state.data.min5) / (utility_state.data.max5 - utility_state.data.min5)).toFixed(3) } </DataTable.Cell>
-                                <DataTable.Cell> {((item.c6 - utility_state.data.min6) / (utility_state.data.max6 - utility_state.data.min6)).toFixed(3) } </DataTable.Cell>
+                                <DataTable.Cell> {((item.nilai_ram - utility_state.data.min1) / (utility_state.data.max1 - utility_state.data.min1)).toFixed(3) } </DataTable.Cell>
+                                <DataTable.Cell> {((item.nilai_processor - utility_state.data.min2) / (utility_state.data.max2 - utility_state.data.min2)).toFixed(3) } </DataTable.Cell>
+                                <DataTable.Cell> {((item.nilai_display - utility_state.data.min3) / (utility_state.data.max3 - utility_state.data.min3)).toFixed(3) } </DataTable.Cell>
+                                <DataTable.Cell> {((item.nilai_storage - utility_state.data.min4) / (utility_state.data.max4 - utility_state.data.min4)).toFixed(3) } </DataTable.Cell>
+                                <DataTable.Cell> {((item.nilai_vga - utility_state.data.min5) / (utility_state.data.max5 - utility_state.data.min5)).toFixed(3) } </DataTable.Cell>
+                                <DataTable.Cell> {((item.nilai_harga - utility_state.data.min6) / (utility_state.data.max6 - utility_state.data.min6)).toFixed(3) } </DataTable.Cell>
                             </DataTable.Row>
                             ))}
-                            {/* <DataTable.Pagination
-                                // page={page}
-                                // numberOfPages={3}
-                                // onPageChange={(page) => setPage(page)}
-                                // label="1-2 of 6"
-                                // optionsPerPage={optionsPerPage}
-                                // itemsPerPage="2"
-                                // setItemsPerPage={setItemsPerPage}
-                                // showFastPagination
-                                // optionsLabel={'Rows per page'}
-                            /> */}
                         </DataTable>
                     </View>
                 </View>

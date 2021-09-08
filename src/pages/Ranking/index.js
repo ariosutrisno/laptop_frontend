@@ -4,7 +4,7 @@ import { colors } from '../../utils';
 import { StatusBarPage } from '../../components';
 import {connect} from 'react-redux';
 import {
-    PERHITUNGAN,
+    RANKING,
 } from '../../config/redux/_actions/_list_data_hitung/data_hitung';
 import {API, setAuthToken} from '../../config/Api/Api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -21,15 +21,21 @@ const RankingLaptop = ({route,perhitungan, perhitungan_state}) =>{
     const [isloading,setloading] = useState(false)
     const [isError,setEror] = useState(false)
     const [isRefresh,setRefresh] = useState(false)
-    const {filter,dataram,dataprocessor,dataharga} = route.params
+    const {merek_laptop,ram,processor,harga,display,storage,vga_card} = route.params
+    console.log('dataram',ram)
+    console.log('dataprocesspr',processor)
+    console.log('harga',harga)
+    console.log('merek_laptop',merek_laptop)
+    console.log('display',display)
+    console.log('storage',storage)
+    console.log('vga_card',vga_card)
     const [datarank,setDatarank] = useState()
     const fetchData = async() =>{
             setloading(true)
             try {
                 const token = await AsyncStorage.getItem('token');
                 setAuthToken(token);
-                const dataRAnk = await API.get(`user/ranking?filter=${filter}&ram=${dataram}&processor=${dataprocessor}&harga=${dataharga}`)
-                console.log('response data=====>>>>', dataRAnk.data.data)
+                const dataRAnk = await API.get(`user/filter?merek_laptop=${merek_laptop}&ram=${ram}&processor=${processor}&harga=${harga}&storage=${storage}&display=${display}&vga_card=${vga_card}`)
                 setDatarank(dataRAnk.data.data)
                 return dataRAnk.data.data;
             } catch (error) {
@@ -44,22 +50,22 @@ const RankingLaptop = ({route,perhitungan, perhitungan_state}) =>{
             
         }, [])
         
-        console.log('response dataranking==========================>>>>>>',datarank)
+        // console.log('response dataranking==========================>>>>>>',datarank.filter)
 const scrollY = React.useRef(new Animated.Value(8)).current;
     return(
         <View style={styles.wrapper.pages}>
             <StatusBarPage/>
                 <View style={styles.lineText}>
                     <View style={styles.row}>
-                    <Text style={styles.texts}>DATA RANKING</Text>
+                    <Text style={styles.texts}>HASIL RANKING</Text>
                     </View>
                 </View>
 
                 <View style={styles.wrapper.components}>
             
                     <Animated.FlatList
-                        data={datarank}
-                        keyExtractor={item=>item.idx_perhitungan.toString()}
+                        data={datarank?.filter}
+                        keyExtractor={item=>item.idx_alternatif.toString()}
                         onScroll={Animated.event(
                             [{nativeEvent: {contentOffset:{y:scrollY}}}],
                             {useNativeDriver:true}
@@ -107,7 +113,7 @@ const scrollY = React.useRef(new Animated.Value(8)).current;
                             transform: [{scale}]
                             }}>
                             <Image
-                                source={item.imageUrl}
+                                source={{ uri:`https://adminproject.site/${item.gambar}` }}
                                 style={{ 
                                     width: AVATAR_SIZE, 
                                     height: AVATAR_SIZE, 
@@ -118,11 +124,11 @@ const scrollY = React.useRef(new Animated.Value(8)).current;
                             />
                             <View>
                                 <Text style={{fontSize:22, fontWeight:'700'}}> No : {item.alternatif}  </Text>
-                                <Text style={{fontSize:18, opacity:.7}}> Nama Laptop : {item.datalaptop} </Text>
+                                <Text style={{fontSize:18, opacity:.7}}> Nama Laptop : {item.merek_laptop} </Text>
                                 <Text style={{fontSize:18, opacity:.7}}> Ram : {item.ram} </Text>
                                 <Text style={{fontSize:18, opacity:.7}}> Processor : {item.processor} </Text>
                                 <Text style={{fontSize:18, opacity:.7}}> Harga : {item.harga} </Text>
-                                <Text style={{fontSize:18, opacity:.7}} > Score : {item.hasil_akhir} </Text>
+                                <Text style={{fontSize:18, opacity:.7}} > Hasil : {datarank?.rank[index]} </Text>
                                 {/* <Text style={{fontSize:18, opacity:.7}} > Ranking : {current.indexOf(perhitungan_state?.data?.rank[index])+1} </Text>
                                 {/* <Text style={{fontSize:18, opacity:.8, color:'#0099cc'}} onPress={()=> handleGoTo('ViewData')}>
                                     selengkapnya...
@@ -201,7 +207,7 @@ const styles = {
 };
 const mapDispatchToProps = (dispatch) => {
     return {
-    perhitungan: () => dispatch(PERHITUNGAN()),
+    perhitungan: () => dispatch(RANKING()),
     };
 };
 const mapStateToProps = (state) =>{

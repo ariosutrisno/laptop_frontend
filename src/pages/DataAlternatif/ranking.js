@@ -38,7 +38,7 @@ const Ranking = ({ranking, ranking_state}) =>{
             fetchData()
         }, [])
         
-        console.log('respon ===========>>', ranking_state.data.alternatif)
+        console.log('respon DATA DONGGGGGGG ===========>>', ranking_state.data.alternatif)
         
 const scrollY = React.useRef(new Animated.Value(8)).current;
     return(
@@ -81,7 +81,7 @@ const scrollY = React.useRef(new Animated.Value(8)).current;
                             transform: [{scale}]
                             }}>
                             <Image
-                                source={item.imageUrl}
+                                source={{ uri:`https://adminproject.site/${item.gambar}` }}
                                 style={{ 
                                     width: AVATAR_SIZE, 
                                     height: AVATAR_SIZE, 
@@ -94,7 +94,7 @@ const scrollY = React.useRef(new Animated.Value(8)).current;
                                 <Text style={{fontSize:22, fontWeight:'700'}}> No : {item.alternatif}  </Text>
                                 <Text style={{fontSize:18, opacity:.7}}> Nama Laptop : {item.datalaptop} </Text>
                                 <Text style={{fontSize:18, opacity:.7}} > Score : {ranking_state?.data?.rank[index]} </Text>
-                                <Text style={{fontSize:18, opacity:.7}} > Ranking : {current.indexOf(ranking_state?.data?.rank[index])+1} </Text>
+                                {/* <Text style={{fontSize:18, opacity:.7}} > Ranking : {current.indexOf(ranking_state?.data?.rank[index])+1} </Text> */}
                                 {/* <Text style={{fontSize:18, opacity:.8, color:'#0099cc'}} onPress={()=> handleGoTo('ViewData')}>
                                     selengkapnya...
                                 </Text> */}

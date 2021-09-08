@@ -93,13 +93,16 @@ const InputKebutuhan = ({navigation,rekomenAdd}) => {
             <View style={styles.pages.contentWhite}/>
                 <LinearGradient colors={['#9CECFB', '#65C7F7','#0052D4']} style={styles.pages.squareData}>
                 <Text style={styles.write}>INPUT DATA REQUEST CUSTOMER</Text>
-                    
+                <View style={styles.space(20)}/>
+                <Text style={styles.fixToText2} >MEREK LAPTOP</Text>
                     <TextInput
                     style={styles.inputData} 
                     placeholder="Merek laptop"
                     value={input.merek}
                     onChangeText={onHandleChange("merek")}
                     />
+                    <View style={styles.space(20)}/>
+                    <Text style={styles.fixToText2} >HARGA LAPTOP</Text>
                     <TextInput
                     style={styles.inputData} 
                     placeholder="HARGA LAPTOP"
@@ -109,7 +112,7 @@ const InputKebutuhan = ({navigation,rekomenAdd}) => {
                     <View style={styles.fixToText}>
                     <ButtonInputData title="Lanjut" onPress={handleSubmit} 
                     disabled={input.disabled}
-                    submit={input.submitsubmit}
+                    submit={input.submit}
                     />
                     <ButtonInputData title="Batal" onPress={()=> navigation.goBack()}/>
                     </View>
@@ -164,7 +167,16 @@ const styles = ({
         fontSize:20,
         fontWeight:'bold', 
         fontFamily:'times'
-    }
+    },
+    fixToText2:{
+        fontWeight:'bold', 
+        color:colors.Font_Color_Black,
+    },
+    space:value =>{
+        return{
+            height:value,
+        };
+    },
 })
 const mapDispatchToProps = (dispatch) => {
     return {

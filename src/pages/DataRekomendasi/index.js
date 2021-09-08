@@ -90,7 +90,7 @@ const scrollY = React.useRef(new Animated.Value(8)).current;
                             top:25,
                             transform: [{scale}]
                             }}>
-                            <Image
+                            {/* <Image
                                 source={item.imageUrl}
                                 style={{ 
                                     width: AVATAR_SIZE, 
@@ -99,7 +99,7 @@ const scrollY = React.useRef(new Animated.Value(8)).current;
                                     marginRight: SPACING / 2,
                                 }}
                                 
-                            />
+                            /> */}
                             <View>
                                 <Text style={{fontSize:22, fontWeight:'700'}}> Merek Laptop : {item.merek_laptop} </Text>
                                 <Text style={{fontSize:18, opacity:.7}}> Harga Laptop : {item.harga_laptop} </Text>
@@ -117,7 +117,7 @@ const scrollY = React.useRef(new Animated.Value(8)).current;
                                     ]
 
                                     )}>
-                                    <Text style={{fontSize:18, opacity:.5, color:'#FF0000', fontWeight:'bold', left:200}}> Hapus </Text>
+                                    <Text style={{fontSize:18, opacity:.5, color:'#FF0000', fontWeight:'bold', left:20, top:10}}> Hapus </Text>
                                 </TouchableOpacity>
                             </View>
                             </Animated.View>

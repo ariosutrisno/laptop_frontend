@@ -13,7 +13,7 @@ const DetailLaptop = ({route}) =>{
         <View style={styles.Pages.Container}>
             <StatusBarPage/>
             <View style={styles.Pages.ContentImg}>
-            <Carousel data = {DummyData}/>
+            <Image style={styles.image} source={{ uri:`https://adminproject.site/${route.params.gambar}` }} />
             </View>
             <View style={styles.Pages.ContentSpec}>
                 <View style={styles.pagesText}>
@@ -103,7 +103,12 @@ const styles = {
             right:10,
             textAlign:'justify'
         },
-    }
+    },
+    image: {
+        width: width - 100,
+        height: height/4 ,
+        borderRadius:5,
+    },
 
 };
 

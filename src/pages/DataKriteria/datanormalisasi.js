@@ -32,7 +32,7 @@ const datanormalisasi = ({normalisasi_kriteria,dd}) =>{
         useEffect(() => {
             fetchData()
         }, [])
-        // console.log('respons dd==========>>', dd.data.data_kriteria,dd.data.data_kriteria_get)
+        // console.log('respons isi data==========>>', dd.data.sum)
     return(
         <View style={styles.wrapper.pages}>
             <StatusBarPage/>
@@ -43,7 +43,7 @@ const datanormalisasi = ({normalisasi_kriteria,dd}) =>{
                 </View>
                 <View style={styles.wrapper.components}>
                     <Animated.FlatList
-                        data={dd?.data.data_kriteria}
+                        data={dd?.data.kriteria}
                         keyExtractor={item=>item.idx_kriteria.toString()}
                         onScroll={Animated.event(
                             [{nativeEvent: {contentOffset:{y:scrollY}}}],
@@ -81,7 +81,7 @@ const datanormalisasi = ({normalisasi_kriteria,dd}) =>{
                             <View>
                                 <Text style={{fontSize:14, fontWeight:'700'}}> ID KRITERIA : {item.kriteria_id} </Text>
                                 <Text style={{fontSize:14, opacity:.7, fontWeight:'700'}}> NAMA KRITERIA : {item.nama_kriteria}</Text>
-                                <Text style={{fontSize:14, opacity:.7,fontWeight:'700',color:'black'}}> Normalisasi : {(item.bobot / dd?.data.total_data_kriteria).toFixed(3) } </Text>
+                                <Text style={{fontSize:14, opacity:.7,fontWeight:'700',color:'black'}}> Normalisasi : {(item.bobot /dd?.data.sum).toFixed(3) } </Text>
                             </View>
                             </Animated.View>
                         }}
